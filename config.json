@@ -1,0 +1,22 @@
+{
+    "mysql" : {
+        "host" : "mysql://$OPENSHIFT_MYSQL_DB_HOST",
+        "port" : $OPENSHIFT_MYSQL_DB_PORT,
+        "user" : "admin3mFvBFL",
+        "password" : "SEcRQaAtaY5P",
+        "database" : "screenshotshare"
+    },
+    
+    "server" : {
+        "address" : "localhost",
+        "port" : 80
+    },
+    
+    "bot" : {
+        "server" : "irc.ozinger.org",
+        "nick" : "SSSBot",
+        "userName" : "ScreenShotShare",
+        "realName" : "ScreenShotShare",
+        "channels" : ["#ropeca"]
+    }
+}
