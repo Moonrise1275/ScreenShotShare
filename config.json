@@ -8,7 +8,7 @@
     },
     
     "server" : {
-        "address" : "localhost",
+        "address" : "http://screenshotshare-moonrise1275.rhcloud.com/",
         "port" : 80
     },
     

@@ -15,7 +15,7 @@ function start(config, dbhandler) {
             res.writeHead(200, {'Content-type': 'text/html'});
             res.write('<html><body><form action = "/screenshots" name = "select" method = "get">Username : <input type = "text" name = "username" value = "');
             res.write(query.username || '');
-            res.write('"><br><pre>Page     : </pre><input type = "text" name = "page" value = "');
+            res.write('"><br>Page     : <input type = "text" name = "page" value = "');
             res.write(query.page || '1');
             res.write('"><br><input type = "submit", name = "submit"></form>')
             
