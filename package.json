@@ -25,9 +25,9 @@
   "devDependencies": {},
   "bundleDependencies": [],
   "scripts": {
-    "start": "node screenshotshare.js"
+    "start": "node test.js"
   },
 
   "private": true,
-  "main": "screenshotshare.js"
+  "main": "test.js"
 }
