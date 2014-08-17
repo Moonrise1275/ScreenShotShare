@@ -24,9 +24,6 @@
   },
   "devDependencies": {},
   "bundleDependencies": [],
-  "scripts": {
-    "start": "node main.js"
-  },
 
   "private": true,
   "main": "main.js"
