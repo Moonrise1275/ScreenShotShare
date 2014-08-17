@@ -3,6 +3,7 @@ var connection;
 
 function init(config) {
 	console.info('mysql initializing');
+	config.port = parseInt(config.port);
     connection = mysql.createConnection(config);
 	connection.connect(function(err) {
 		if (err) {

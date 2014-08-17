@@ -24,6 +24,9 @@
   },
   "devDependencies": {},
   "bundleDependencies": [],
+  "scripts": {
+    "start": "node screenshotshare.js"
+  },
 
   "private": true,
   "main": "screenshotshare.js"
