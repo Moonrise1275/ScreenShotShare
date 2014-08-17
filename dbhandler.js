@@ -3,7 +3,8 @@ var connection;
 
 function init(config) {
 	console.info('mysql initializing');
-	config.port = parseInt(config.port);
+	config.host = $OPENSHIFT_MYSQL_DB_HOST || 'localhost';
+	config.port = $OPENSHIFT_MYSQL_DB_PORT || 3306;
     connection = mysql.createConnection(config);
 	connection.connect(function(err) {
 		if (err) {
