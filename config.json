@@ -1,7 +1,7 @@
 {
     "mysql" : {
-        "host" : "$OPENSHIFT_MYSQL_DB_HOST",
-        "port" : "$OPENSHIFT_MYSQL_DB_PORT",
+        "host" : "127.13.38.130",
+        "port" : 3306,
         "user" : "admin74sVfwK",
         "password" : "jb8xfwfUUNbM",
         "database" : "screenshotshare"
