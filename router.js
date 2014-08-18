@@ -31,6 +31,12 @@ function screenshots(res, dbhandler, path) {
     }
 	
 	function onResult(array) {
+		if (typeof query !== 'undefined') {
+			var query = {};
+			query['username'] = '';
+			query['page'] = '1';
+		}
+		
         res.writeHead(200, {'Content-type': 'text/html'});
         res.write('<html><body><form action = "/screenshots" name = "select" method = "get">Username : <input type = "text" name = "username" value = "');
         res.write(query.username || '');
