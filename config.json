@@ -4,7 +4,11 @@
         "port" : 3306,
         "user" : "admin74sVfwK",
         "password" : "jb8xfwfUUNbM",
+<<<<<<< HEAD
+        "database" : "screenshotssv09"
+=======
         "database" : "screenshotshare"
+>>>>>>> dda4bd64ff61774aeeceb4e548d6c909d18474ca
     },
     
     "server" : {
