@@ -31,8 +31,9 @@ function screenshots(res, dbhandler, path) {
     }
 	
 	function onResult(array) {
+		var query = query;
 		if (typeof query !== 'undefined') {
-			var query = {};
+			query = {};
 			query['username'] = '';
 			query['page'] = '1';
 		}
