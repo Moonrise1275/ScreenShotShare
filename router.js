@@ -19,6 +19,7 @@ function route(res, dbhandler, url) {
 
 function home(res, dbhandler, path) {
 	var homepage = fs.readFileSync('./home.html', 'utf-8');
+	res.end(homepage);
 }
 
 function screenshots(res, dbhandler, path) {
