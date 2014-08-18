@@ -48,7 +48,7 @@ function screenshots(res, dbhandler, path) {
         res.end('</body></html>');
     }
 	
-	if (typeof query.username !== 'undefined') {
+	if (typeof query !== 'undefined' && typeof query.username !== 'undefined') {
 		console.info('username exist');
 		dbhandler.selectWith('screenshots', 'WHERE username LIKE "%' + query.username + '%" OR message LIKE "%' + query.username + '%" ORDER BY ind DESC', onResult);
 	} else {
