@@ -9,6 +9,9 @@ function start(config, dbhandler) {
         console.error(err);
     }
     bot.addListener('message', function(from, to, text) {
+		if (text.toLowerCase().indexOf('&site') > -1 ) {
+			bot.say(to, 'Site : ' + config.server.address)
+		}
         
         if ((text.indexOf('http:') > -1) && ((text.indexOf('.jpg') > -1) || (text.indexOf('.png') > -1))) {
             var end = (text.indexOf('.jpg') != -1) ? text.indexOf('.jpg') : text.indexOf('.png');
