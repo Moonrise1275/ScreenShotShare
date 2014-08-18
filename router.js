@@ -13,16 +13,16 @@ function route(res, dbhandler, url) {
 	if (typeof handle[path] === 'function') {
 		handle[path](res, dbhandler, path);
 	} else {
-		home(res, dbhandler, path);
+		home(res, dbhandler, query);
 	}
 }
 
-function home(res, dbhandler, path) {
+function home(res, dbhandler, query) {
 	var homepage = fs.readFileSync('./home.html', 'utf-8');
 	res.end(homepage);
 }
 
-function screenshots(res, dbhandler, path) {
+function screenshots(res, dbhandler, query) {
 	function showImage(res, obj) {
         var describe = obj.username + ' : ' + obj.message + ' - ' + obj.date + ' <br>';
         res.write(describe);
@@ -31,12 +31,6 @@ function screenshots(res, dbhandler, path) {
     }
 	
 	function onResult(array) {
-		var query = query;
-		if (typeof query !== 'undefined') {
-			query = {};
-			query['username'] = '';
-			query['page'] = '1';
-		}
 		
         res.writeHead(200, {'Content-type': 'text/html'});
         res.write('<html><body><form action = "/screenshots" name = "select" method = "get">Username : <input type = "text" name = "username" value = "');
