@@ -1,0 +1,22 @@
+{
+    "mysql" : {
+        "host" : "127.13.38.130",
+        "port" : 3306,
+        "user" : "admin74sVfwK",
+        "password" : "jb8xfwfUUNbM",
+        "database" : "screenshotssv09"
+    },
+    
+    "server" : {
+        "address" : "http://screenshotshare-moonrise1275.rhcloud.com",
+        "port" : 80
+    },
+    
+    "bot" : {
+        "server" : "irc.ozinger.org",
+        "nick" : "SSSBot",
+        "userName" : "ScreenShotShare",
+        "realName" : "ScreenShotShare",
+        "channels" : ["#ropeca, #moonrise"]
+    }
+}
