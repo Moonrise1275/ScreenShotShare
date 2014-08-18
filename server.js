@@ -31,10 +31,10 @@ function start(config, dbhandler) {
 		
 		if (typeof query.username !== 'undefined') {
 			console.info('username exist');
-			dbhandler.selectWith('screenshots', 'WHERE username LIKE "%' + query.username + '%" OR message LIKE "%' + query.username + '%" ORDER BY ind DESC', onResult);
+			dbhandler.selectWith('screenshotsv09', 'WHERE username LIKE "%' + query.username + '%" OR message LIKE "%' + query.username + '%" ORDER BY ind DESC', onResult);
 		} else {
 			console.info('empty username');
-			dbhandler.selectWith('screenshots', 'ORDER BY ind DESC', onResult);
+			dbhandler.selectWith('screenshotsv09', 'ORDER BY ind DESC', onResult);
 		}
     }
     

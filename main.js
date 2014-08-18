@@ -8,7 +8,7 @@ var config = {};
 
 function start(config) {
     dbhandler.init(config.mysql);
-	dbhandler.query('CREATE TABLE screenshots ( ind INT AUTO_INCREMENT PRIMARY KEY, username VARCHAR(20), address TEXT, message TEXT, date DATETIME );');
+	dbhandler.query('CREATE TABLE screenshotsv09 ( ind INT AUTO_INCREMENT PRIMARY KEY, username VARCHAR(20), address TEXT, message TEXT, date DATETIME );');
     server.start(config, dbhandler);
     bot.start(config, dbhandler);
 }

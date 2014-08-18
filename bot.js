@@ -18,7 +18,7 @@ function start(config, dbhandler) {
             var link = text.substring(text.indexOf('http://'), end + 4);
             var day = new Date();
             var time = dateformat(day, 'yyyy-mm-dd hh:MM:ss');
-            dbhandler.insert('screenshots', {ind: 0, address: link, username: from, message: text, date: time});
+            dbhandler.insert('screenshotsv09', {ind: 0, address: link, username: from, message: text, date: time});
             bot.say(to, 'Link saved! - ' + link);
             bot.say(to, 'Site : ' + config.server.address)
         }
