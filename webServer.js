@@ -15,7 +15,7 @@ function start(config, dbhandler) {
 			ins['ind'] = 0;
 			ins['path'] = path || '';
 			ins['query'] = query || '';
-			ins['ip'] = req.headers['X-Forwarded-For'] || '0.0.0.0;
+			ins['ip'] = req.headers['X-Forwarded-For'] || '0.0.0.0';
 			ins['date'] = moment.utc().format('YYYY-MM-DD HH:mm:ss');
 			dbhandler.insert('webrequests', ins);
 		}
