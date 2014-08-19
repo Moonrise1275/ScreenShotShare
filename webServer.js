@@ -19,6 +19,7 @@ function start(config, dbhandler) {
     var ip = process.env.OPENSHIFT_NODEJS_IP || config.webserver.ip;
     var port = process.env.OPENSHIFT_NODEJS_PORT | config.webserver.port;
     server.listen(port, ip);
+	console.info('web server launched');
 }
 
 exports.start = start;
