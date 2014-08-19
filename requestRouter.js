@@ -37,13 +37,13 @@ function screenshots(res, query, dbhandler) {
             res.write('<html><body><form action = "/screenshots" name = "select" method = "get">Channel : <input type = "text" name = "channel" value = "');
             res.write(query.channel || '');
             res.write('"><br>Select nearest city<br>');
-            res.write('Seoul<input type = "radio" name = "lang" value = "Asis/Seoul">')
+            res.write('Seoul<input type = "radio" name = "lang" value = "Asia/Seoul">')
             res.write('Los Angeles<input type = "radio" name = "lang" value = "America/Los_Angeles">')
             res.write('New York<input type = "radio" name = "lang" value = "America/New_York">')
             res.write('London<input type = "radio" name = "lang" value = "Europe/London">')
             res.write('Cairo<input type = "radio" name = "lang" value = "Africa/Cairo">')
-            res.write('Kabul<input type = "radio" name = "lang" value = "Asis/Kabul">')
-            res.write('Shanghai<input type = "radio" name = "lang" value = "Asis/Shanghai">')
+            res.write('Kabul<input type = "radio" name = "lang" value = "Asia/Kabul">')
+            res.write('Shanghai<input type = "radio" name = "lang" value = "Asia/Shanghai">')
             res.write('<br>Username : <input type = "text" name = "username" value = "');
             res.write(query.username || '');
             res.write('"><br>Page : <input type = "text" name = "page" value = "');
