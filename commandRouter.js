@@ -9,7 +9,7 @@ function route(bot, message, from, to, dbhandler, config) {
     
     var flag = message.indexOf('&');
     if (flag > -1) {
-        message = message.subString(flag);
+        message = message.substring(flag);
         var array = message.split(' ');
         var name = array[0].substring(1);
         if (typeof handle[name] === 'function') {
