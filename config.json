@@ -1,34 +1,22 @@
 {
-    "webserver" : {
-        "ip" : "http://screenshotshare-moonrise1275.rhcloud.com",
-        "port" : 80
-    },
-    
-    "irc" : {
-        "servers" : ["irc.ozinger.org", "irc.esper.net"],
-        "commands" : {
-	  "site" : "http://screenshotshare-moonrise1275.rhcloud.com"
-        },
-        "irc.ozinger.org" : {
-            "nick" : "MoonregiBot",
-            "userName" : "MoonrieseBot",
-            "realName" : "Moonrise's IRC Bot",
-            "channels" : ["#moonrise"]
-        },
-        
-        "irc.esper.net" : {
-            "nick" : "MoonriseBot",
-            "userName" : "MoonriseBot",
-            "realName" : "Moonrise's IRC Bot",
-            "channels" : []
-        }
-    },
-    
     "mysql" : {
         "host" : "127.13.38.130",
         "port" : 3306,
         "user" : "admin74sVfwK",
         "password" : "jb8xfwfUUNbM",
         "database" : "screenshotshare"
+    },
+    
+    "server" : {
+        "address" : "http://screenshotshare-moonrise1275.rhcloud.com",
+        "port" : 80
+    },
+    
+    "bot" : {
+        "server" : "irc.ozinger.org",
+        "nick" : "SSSBot",
+        "userName" : "ScreenShotShare",
+        "realName" : "ScreenShotShare",
+        "channels" : ["#ropeca, #moonrise"]
     }
 }
