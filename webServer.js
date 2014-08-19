@@ -6,7 +6,7 @@ var router = require("./requestRouter");
 
 function start(config, dbhandler) {
     function onRequest(req, res) {
-		console.info(req.headers.host);
+		//console.info(req.headers.host);
 		
         var urlstring = req.url;
         var path = url.parse(urlstring).pathname;
