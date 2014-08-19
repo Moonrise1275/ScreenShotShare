@@ -1,9 +1,9 @@
-var mysql = require('mysql');
+var mysql = require("mysql");
 var connection;
 
-function init(config) {
-	console.info('mysql initializing');
-    connection = mysql.createConnection(config);
+function start(config) {
+    console.info('mysql initializing');
+    connection = mysql.createConnection(config.mysql);
 	connection.connect(function(err) {
 		if (err) {
 			console.error('mysql connection error');
@@ -47,7 +47,7 @@ function select(table, callback) {
     selectWith(table, '', callback);
 }
 
-exports.init = init;
+exports.start = start;
 exports.query = query;
 exports.insert = insert;
 exports.select = select;
