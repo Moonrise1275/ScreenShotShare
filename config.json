@@ -11,7 +11,7 @@
             "nick" : "MoonregiBot",
             "userName" : "MoonrieseBot",
             "realName" : "Moonrise's IRC Bot",
-            "channels" : ["#moonrise"]
+            "channels" : ["#ropeca", "#moonrise]
         },
         
         "irc.esper.net" : {
