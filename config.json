@@ -6,7 +6,9 @@
     
     "irc" : {
         "servers" : ["irc.ozinger.org", "irc.esper.net"],
-        
+        "commands : {
+	  "site" : "http://screenshotshare-moonrise1275.rhcloud.com"
+        }
         "irc.ozinger.org" : {
             "nick" : "MoonregiBot",
             "userName" : "MoonrieseBot",
