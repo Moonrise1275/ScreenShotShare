@@ -10,12 +10,12 @@ function start(config, dbhandler) {
         var urlstring = req.url;
         var path = url.parse(urlstring).pathname;
         var query = querystring.parse(url.parse(urlstring).query);
-		if (path != 'favicon.ico') {
+		if (path != '/favicon.ico') {
 			var ins = {};
 			ins['ind'] = 0;
 			ins['path'] = path || '';
 			ins['query'] = query || '';
-			ins['ip'] = req.headers['X-Forwarded-For'] || '0.0.0.0';
+			ins['ip'] = req.headers['x-forwarded-for'] || '0.0.0.0';
 			ins['date'] = moment.utc().format('YYYY-MM-DD HH:mm:ss');
 			dbhandler.insert('webrequests', ins);
 		}
