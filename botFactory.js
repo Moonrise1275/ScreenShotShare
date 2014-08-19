@@ -33,6 +33,13 @@ function onKick(bot, server, botnick) {
 	}
 }
 
+function onQuit(bot) {
+	return function(nick, reason, channels, message) {
+		console.info('IRC bot is reconnecting to server ' + message.server);
+		bot.connect();
+	}
+}
+
 function onError(err) {
     console.error('error on IRC bot');
     console.error(err);
@@ -45,6 +52,7 @@ function start(config, dbhandler) {
         bots[server].addListener('message', onMessage(bots[server], dbhandler, config));
         bots[server].addListener('invite', onInvite(bots[server], server));
 		bots[server].addListener('kick', onKick(bots[server], server, ircconfig.nick));
+		bots[server].addListener('quit', onQuit(bots[server]));
         bots[server].addListener('error', onError);
     }
 }
