@@ -5,5 +5,5 @@ var config = JSON.parse(configfile);
 start(config);
 
 function start(config) {
-	console.info(config.irc['irc.ozinger.org']);
+	console.info(config.irc.commands.site);
 }
