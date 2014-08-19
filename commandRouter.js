@@ -11,7 +11,7 @@ function route(bot, message, from, to, dbhandler, config) {
     if (flag > -1) {
         message = message.subString(flag);
         var array = message.split(' ');
-        var name = array[0].subString(1);
+        var name = array[0].substring(1);
         if (typeof handle[name] === 'function') {
             handle[name](bot, name, array, from, to, dbhandler, config);
         }
