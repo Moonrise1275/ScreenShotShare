@@ -25,7 +25,7 @@ function screenshots(res, query, dbhandler) {
         var describe = '[' + obj.channel + '] ' + obj.username + ' : ' + obj.message + ' - ';
         //describe += obj.date.getFullYear() + '.' + months[obj.date.getMonth()] + '.' + obj.date.getDate() + ' ';
         //describe += obj.date.getHours() + ':' + obj.date.getMinutes() + ':' + obj.date.getSeconds() + '<br>';
-        describe += moment.utc(obj.date).tz(obj.lang).format('YYYY.MM.DD HH:mm:ss z') + '<br>';
+        describe += moment.utc(obj.date).tz(query.lang || 'Asia/Seoul').format('YYYY.MM.DD HH:mm:ss z') + '<br>';
         res.write(describe);
         var image = '<image src = "' + obj.address + '" style = "max-width: 100%; height: auto;"/> <p>';
         res.write(image);
@@ -36,7 +36,7 @@ function screenshots(res, query, dbhandler) {
             res.writeHead(200, {'Content-type': 'text/html'});
             res.write('<html><body><form action = "/screenshots" name = "select" method = "get">Channel : <input type = "text" name = "channel" value = "');
             res.write(query.channel || '');
-            res.write('"><br>Select nearest citi<br>');
+            res.write('"><br>Select nearest city<br>');
             res.write('Seoul<input type = "radio" name = "lang" value = "Asis/Seoul">')
             res.write('Los Angeles<input type = "radio" name = "lang" value = "America/Los_Angeles">')
             res.write('New York<input type = "radio" name = "lang" value = "America/New_York">')
