@@ -1,7 +1,10 @@
+var fs = require("fs");
 var irc = require("irc");
 var router = require("./commandRouter");
+var writer = require("./JSONWriter");
 
 var bots = [];
+var ircbotconfig = JSON.parse(fs.readFileSync('ircbots.json'));
 
 function createDatabases(dbhandler) {
 	dbhandler.query('CREATE TABLE screenshots ( ind INT AUTO_INCREMENT PRIMARY KEY, channel TINYTEXT, username TINYTEXT, address TINYTEXT, message TEXT, date DATETIME );');
@@ -13,10 +16,25 @@ function onMessage(bot, dbhandler, config) {
     };
 }
 
-function onInvite(bot) {
+function onInvite(bot, server) {
     return function(channel, from, message) {
+		ircbotconfig[server].channels.push(channel);
+		writer.write('ircbots.json', ircbotconfig);
         bot.join(channel);
     };
+}
+
+function onKick(bot, server, botnick) {
+	return function(channel, nick, by, reason, message) {
+		if (nick != botnick) return;
+		for(var i in ircbotconfig[server].channels) {
+			if (ircbotconfig[server].channels[i] == channel) {
+				delete ircbotconfig[server].channels[i];
+				writer.write('ircbots.json', ircbotconfig);
+				break;
+			}
+		}
+	}
 }
 
 function onError(err) {
@@ -26,12 +44,13 @@ function onError(err) {
 
 function start(config, dbhandler) {
 	createDatabases(dbhandler);
-    for (var num in config.irc.servers) {
-		var server = config.irc.servers[num];
-		var ircconfig = config.irc[server];
+	
+    for (var server in ircbotconfig) {
+		var ircconfig = ircbotconfig[server];
         bots[server] = new irc.Client(server, ircconfig.nick, ircconfig);
         bots[server].addListener('message', onMessage(bots[server], dbhandler, config));
-        bots[server].addListener('invite', onInvite(bots[server]));
+        bots[server].addListener('invite', onInvite(bots[server], server));
+		bots[server].addListener('kick', onKick(bots[server], server, ircconfig.nick));
         bots[server].addListener('error', onError);
     }
 }
