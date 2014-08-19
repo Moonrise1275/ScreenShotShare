@@ -2,7 +2,7 @@ var mysql = require("mysql");
 var connection;
 
 function start(config) {
-    console.info('mysql initializing');
+    //console.info('mysql initializing');
     connection = mysql.createConnection(config.mysql);
 	connection.connect(function(err) {
 		if (err) {
@@ -13,7 +13,7 @@ function start(config) {
 }
 
 function query(msg) {
-	console.info('mysql sending query');
+	//console.info('mysql sending query');
     connection.query(msg, function(err, result) {
 		if (err) {
 			console.error('mysql error while sending query');
@@ -23,7 +23,7 @@ function query(msg) {
 }
 
 function insert(table, object) {
-	console.info('mysql sending insert query');
+	//console.info('mysql sending insert query');
     connection.query('INSERT INTO ' + table + ' SET ?', object, function(err, result) {
 		if (err) {
 			console.error('mysql error while sending insert query');
@@ -33,7 +33,7 @@ function insert(table, object) {
 }
 
 function selectWith(table, postfix, callback) {
-	console.info('mysql sending select query');
+	//console.info('mysql sending select query');
     connection.query('SELECT * FROM ' + table + ' ' + postfix, function(err, result) {
 		if (err) {
 			console.error('mysql error while sending select query');

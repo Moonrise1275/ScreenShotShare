@@ -3,11 +3,11 @@ var moment = require("moment-timezone");
 var handle = {};
 handle['/'] = home;
 handle['/home'] = home;
+handle['/favicon.ico'] = favicon;
 handle['/screenshots'] = screenshots;
 handle['/screenshots/v0.9'] = screenshotsv09;
 
 function route(res, path, query, dbhandler) {
-	console.info(path);
     if (typeof handle[path] === 'function') {
         handle[path](res, query, dbhandler);
     } else {
@@ -17,6 +17,10 @@ function route(res, path, query, dbhandler) {
 
 function home(res, query, dbhandler) {
     
+}
+
+function favicon(res, query, dbhandler) {
+	
 }
 
 function screenshots(res, query, dbhandler) {
