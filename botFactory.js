@@ -6,8 +6,8 @@ var writer = require("./JSONWriter");
 var bots = [];
 var ircbotconfig = JSON.parse(fs.readFileSync('ircbots.json'));
 
-function onMessage(bot, dbhandler, config, message) {
-    return function(from, to, text) {
+function onMessage(bot, dbhandler, config) {
+    return function(from, to, text, message) {
 		console.info(message);
         router.route(bot, text, from, to, dbhandler, config);
     };
@@ -50,7 +50,7 @@ function start(config, dbhandler) {
     for (var server in ircbotconfig) {
 		var ircconfig = ircbotconfig[server];
         bots[server] = new irc.Client(server, ircconfig.nick, ircconfig);
-        bots[server].addListener('message', onMessage(bots[server], dbhandler, config, message));
+        bots[server].addListener('message', onMessage(bots[server], dbhandler, config));
         bots[server].addListener('invite', onInvite(bots[server], server));
 		bots[server].addListener('kick', onKick(bots[server], server, ircconfig.nick));
 		//bots[server].addListener('quit', onQuit(bots[server]));
