@@ -22,7 +22,7 @@ function home(res, query, dbhandler) {
             console.error('Web server error while request "/home"');
             console.error(err);
         }
-        res.writeHead(200, {'Content-Type':'text/html; charset':'utf-8'});
+        res.writeHead(200, {'Content-Type':'text/html; charset=utf-8'});
         res.end(data);
     });
 }
@@ -45,7 +45,7 @@ function screenshots(res, query, dbhandler) {
     
     function showImages(res, dbhandler, query) {
 		function onResult(array) {
-            res.writeHead(200, {'Content-type': 'text/html; charset':'utf-8'});
+            res.writeHead(200, {'Content-type': 'text/html; charset=utf-8'});
             res.write('<html><body><form action = "/screenshots" name = "select" method = "get">Channel : <input type = "text" name = "channel" value = "');
             res.write(query.channel || '');
             res.write('"><br>Select nearest city<br>');
