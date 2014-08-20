@@ -16,7 +16,8 @@
           "realName" : "Moonrise's IRC Bot",
           "channels" :
           [
-               "#moonrise"
+               "#moonrise",
+               "#thermalexpansion"
           ]
      }
 }
