@@ -50,7 +50,7 @@ function start(config, dbhandler) {
     for (var server in ircbotconfig) {
 		var ircconfig = ircbotconfig[server];
         bots[server] = new irc.Client(server, ircconfig.nick, ircconfig);
-        bots[server].addListener('message', onMessage(bots[server], dbhandler, config));
+        bots[server].addListener('message', onMessage(bots[server], dbhandler, config, message));
         bots[server].addListener('invite', onInvite(bots[server], server));
 		bots[server].addListener('kick', onKick(bots[server], server, ircconfig.nick));
 		//bots[server].addListener('quit', onQuit(bots[server]));
