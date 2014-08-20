@@ -2,7 +2,7 @@
 var moment = require("moment");
 
 var handle = [];
-handle['site'] = site;
+handle['images'] = images;
 
 function route(bot, message, from, to, dbhandler, config) {
     screenshotshare(bot, message, from, to, dbhandler, config);
@@ -26,12 +26,13 @@ function screenshotshare(bot, text, from, to, dbhandler, config) {
         //var time = dateformat(day, 'yyyy-mm-dd hh:MM:ss');
         var time = day.format('YYYY-MM-DD HH:mm:ss');
         dbhandler.insert('screenshots', {'ind': 0, 'address': link, 'channel': to, 'username': from, 'message': text, 'date': time});
-        bot.say(to, 'Link saved!');
+        bot.say(to, 'Link saved! Try type "&images"');
     }
 }
 
-function site(bot, name, array, from, to, dbhandler, config) {
-    bot.say(to, 'Site address : ' + config.irc.commands.site + '/screenshots?channel=' + to.substring(1, to.length) + '&lang=&username=&page=1');
+function images(bot, name, array, from, to, dbhandler, config) {
+    if(array.length > 1) return;
+    bot.say(to, 'Images address : ' + config.irc.commands.site + '/screenshots?channel=' + to.substring(1, to.length) + '&lang=&username=&page=1');
 }
 
 exports.route = route;
