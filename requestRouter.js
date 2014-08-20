@@ -1,4 +1,5 @@
 var moment = require("moment-timezone");
+var fs = require("fs");
 
 var handle = {};
 handle['/'] = home;
@@ -16,7 +17,14 @@ function route(res, path, query, dbhandler) {
 }
 
 function home(res, query, dbhandler) {
-    
+    fs.readFile('home.html', 'utf8', function(err, data) {
+        if(err) {
+            console.error('Web server error while request "/home"');
+            console.error(err);
+        }
+        res.writeHead(200, {'Content-Type':'text/html'});
+        res.end(data);
+    });
 }
 
 function favicon(res, query, dbhandler) {
