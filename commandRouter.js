@@ -31,7 +31,7 @@ function screenshotshare(bot, text, from, to, dbhandler, config) {
 }
 
 function site(bot, name, array, from, to, dbhandler, config) {
-    bot.say(to, 'Site address : ' + config.irc.commands.site + '/screenshots?channel=' + to + '&lang=&username=&page=1');
+    bot.say(to, 'Site address : ' + config.irc.commands.site + '/screenshots?channel=' + to.substring(1, to.length) + '&lang=&username=&page=1');
 }
 
 exports.route = route;
