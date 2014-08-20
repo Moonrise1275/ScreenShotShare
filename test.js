@@ -1,4 +1,4 @@
 var writer = require('./JSONWriter');
 var fs = require('fs');
 
-writer.write(JSON.parse(fs.readFileSync('request.json')));
+writer.write('ircbots.json', JSON.parse(fs.readFileSync('ircbots.json')));

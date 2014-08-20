@@ -1,15 +1,22 @@
 {
-	"irc.ozinger.org" : {
-            "nick" : "MoonregiBot",
-            "userName" : "MoonrieseBot",
-            "realName" : "Moonrise's IRC Bot",
-            "channels" : ["#ropeca"]
-        },
-        
-        "irc.esper.net" : {
-            "nick" : "MoonriseBot",
-            "userName" : "MoonriseBot",
-            "realName" : "Moonrise's IRC Bot",
-            "channels" : []
-        }
+     "irc.ozinger.org" :
+     {
+          "nick" : "MoonregiBot",
+          "userName" : "MoonrieseBot",
+          "realName" : "Moonrise's IRC Bot",
+          "channels" :
+          [
+               "#ropeca"
+          ]
+     },
+     "irc.esper.net" :
+     {
+          "nick" : "MoonriseBot",
+          "userName" : "MoonriseBot",
+          "realName" : "Moonrise's IRC Bot",
+          "channels" :
+          [
+               "#moonrise"
+          ]
+     }
 }
