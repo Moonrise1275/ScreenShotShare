@@ -4,6 +4,7 @@ var querystring = require("querystring");
 var moment = require("moment");
 
 var router = require("./requestRouter");
+var writer = require("./JSONWriter");
 
 function start(config, dbhandler) {
     function onRequest(req, res) {
@@ -19,7 +20,7 @@ function start(config, dbhandler) {
 			ins['date'] = moment.utc().format('YYYY-MM-DD HH:mm:ss');
 			dbhandler.insert('webrequests', ins);
 		}
-        
+        writer.write('lastRequest.json', req);
         router.route(res, path, query, dbhandler);
     }
     var server = http.createServer(onRequest);

@@ -25,7 +25,7 @@ function screenshotshare(bot, text, from, to, dbhandler, config) {
         var day = moment.utc();
         //var time = dateformat(day, 'yyyy-mm-dd hh:MM:ss');
         var time = day.format('YYYY-MM-DD HH:mm:ss');
-        dbhandler.insert('screenshots', {ind: 0, address: link, channel: to, username: from, message: text, date: time});
+        dbhandler.insert('screenshots', {'ind': 0, 'address': link, 'channel': to, 'username': from, 'message': text, 'date': time});
         bot.say(to, 'Link saved!');
     }
 }
