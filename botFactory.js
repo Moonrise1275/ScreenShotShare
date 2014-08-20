@@ -1,5 +1,6 @@
 var fs = require("fs");
 var irc = require("irc");
+var utf8 = require("utf8");
 var router = require("./commandRouter");
 var writer = require("./JSONWriter");
 
@@ -8,7 +9,8 @@ var ircbotconfig = JSON.parse(fs.readFileSync('ircbots.json'));
 
 function onMessage(bot, dbhandler, config) {
     return function(from, to, text, message) {
-		console.info(message);
+		console.info(message.nick);
+		console.info(utf8.decode(message.nick));
         router.route(bot, text, from, to, dbhandler, config);
     };
 }
