@@ -9,8 +9,8 @@ var ircbotconfig = JSON.parse(fs.readFileSync('ircbots.json'));
 
 function onMessage(bot, dbhandler, config) {
     return function(from, to, text, message) {
-		console.info(message.nick);
-		console.info(utf8.decode(message.nick));
+		console.info(message.prefix);
+		console.info(utf8.decode(message.prefix));
         router.route(bot, text, from, to, dbhandler, config);
     };
 }
