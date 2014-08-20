@@ -20,7 +20,7 @@ function start(config, dbhandler) {
 			ins['date'] = moment.utc().format('YYYY-MM-DD HH:mm:ss');
 			dbhandler.insert('webrequests', ins);
 		}
-        console.info(req);
+        
         router.route(res, path, query, dbhandler);
     }
     var server = http.createServer(onRequest);
