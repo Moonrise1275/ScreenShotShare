@@ -6,8 +6,9 @@ var writer = require("./JSONWriter");
 var bots = [];
 var ircbotconfig = JSON.parse(fs.readFileSync('ircbots.json'));
 
-function onMessage(bot, dbhandler, config) {
+function onMessage(bot, dbhandler, config, message) {
     return function(from, to, text) {
+		console.info(message);
         router.route(bot, text, from, to, dbhandler, config);
     };
 }
