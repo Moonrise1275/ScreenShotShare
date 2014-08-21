@@ -137,7 +137,7 @@ function register_naver(res, query, dbhandler) {
     var naver_register_query = {
         'client_id' : naver_consumer_key,
         'response_type' : 'code',
-        'redirect_url' : 'http://moonrise.crudelis.kr/callback/naver',
+        'redirect_uri' : 'http://moonrise.crudelis.kr/callback/naver',
         'state' : state_token
     };
     var querystr = 'https://nid.naver.com/oauth2.0/authorize?' + querystring.stringify(naver_register_query);
