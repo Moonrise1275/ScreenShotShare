@@ -142,8 +142,8 @@ function register_naver(res, query, dbhandler) {
     };
     var querystr = 'https://nid.naver.com/oauth2.0/authorize?' + querystring.stringify(naver_register_query);
     console.info(querystr);
-    res.writeHead(200, {'location' : 'www.naver.com'});//querystr
-    res.end('Holy Damn');
+    res.writeHead(200, {'Content-Type' : 'text/html'});
+    res.end('<html><head><script>location.href=' + querystr + '</script></head></html>');
     dbhandler.insert('state_tokens', {'ind' : 0, 'token' : state_token, 'date' : moment.utc().format('YYYY-MM-DD HH:mm:ss')});
 }
 
