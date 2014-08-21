@@ -130,6 +130,7 @@ function screenshotsv09(res, query, dbhandler) {
 }
 
 function register_naver(res, query, dbhandler) {
+	console.info('registering new user');
     var state_token = uuid.v4();
     var naver_register_query = {
         'client_id' : naver_consumer_key,
