@@ -132,7 +132,7 @@ function screenshotsv09(res, query, dbhandler) {
 
 function register_naver(res, query, dbhandler) {
     console.info('registering new user');
-    var state_token = uuid.v4();
+    var state_token = uuid.v4().split('-')[0];
     console.info('state_token = ' + state_token);
     var naver_register_query = {
         'client_id' : naver_consumer_key,
@@ -142,8 +142,8 @@ function register_naver(res, query, dbhandler) {
     };
     var querystr = 'https://nid.naver.com/oauth2.0/authorize?' + querystring.stringify(naver_register_query);
     console.info(querystr);
-    res.writeHead(200, {'Content-Type' : 'text/html'});
-    res.end('<html><body><a href="' + querystr + '">Click me!</a></body></html>');
+    res.writeHead(200, {'location' : querystr});
+    res.end();
     dbhandler.insert('state_tokens', {'ind' : 0, 'token' : state_token, 'date' : moment.utc().format('YYYY-MM-DD HH:mm:ss')});
 }
 
