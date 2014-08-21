@@ -18,8 +18,8 @@ function createDatabases() {
 	query('CREATE TABLE screenshotsv09 ( ind INT AUTO_INCREMENT PRIMARY KEY, username VARCHAR(20), address TEXT, message TEXT, date DATETIME );');
 	query('CREATE TABLE webrequests ( ind INT AUTO_INCREMENT PRIMARY KEY, path TINYTEXT, query TINYTEXT, ip TINYTEXT, date DATETIME );');
 	query('CREATE TABLE state_tokens ( token CHAR(36), date DATETIME );');
-	query('CREATE TABLE accounts ( access_token TINYTEXT NOT NULL PRIMARY KEY, auth_host VARCHAR(10) );');
-	query('CREATE TABLE nicknames ( access_token TINYTEXT NOT NULL, nick TINYTEXT NOT NULL PRIMARY KEY );');
+	query('CREATE TABLE accounts ( access_token TINYTEXT NOT NULL, auth_host VARCHAR(10) );');
+	query('CREATE TABLE nicknames ( access_token TINYTEXT NOT NULL, nick TINYTEXT NOT NULL );');
 }
 
 function query(msg) {
