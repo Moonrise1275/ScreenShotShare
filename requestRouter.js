@@ -15,6 +15,7 @@ handle['/screenshots'] = screenshots;
 handle['/screenshots/v0.9'] = screenshotsv09;
 handle['/register/naver'] = register_naver;
 handle['/callback/naver'] = callback_naver;
+handle['/account'] = account;
 
 function route(res, path, query, dbhandler) {
     if (typeof handle[path] === 'function') {
@@ -130,7 +131,7 @@ function screenshotsv09(res, query, dbhandler) {
 }
 
 function register_naver(res, query, dbhandler) {
-	console.info('registering new user');
+    console.info('registering new user');
     var state_token = uuid.v4();
     var naver_register_query = {
         'client_id' : naver_consumer_key,
@@ -138,8 +139,8 @@ function register_naver(res, query, dbhandler) {
         'redirect_url' : 'http://moonrise.crudelis.kr/callback/naver',
         'state' : state_token
     };
-    naver_register_query = 'https://nid.naver.com/oauth2.0/authorize?' + querystring.stringify(naver_register_query);
-    res.writeHead(200, {'location' : naver_register_query});
+   var querystr = 'https://nid.naver.com/oauth2.0/authorize?' + querystring.stringify(naver_register_query);
+    res.writeHead(200, {'location' : querystr});
     res.end();
     dbhandler.insert('state_tokens', {'token' : state_token, 'date' : moment.utc().format('YYYY-MM-DD HH:mm:ss')});
 }
@@ -159,8 +160,8 @@ function callback_naver(res, query, dbhandler) {
                 'state' : query.state,
                 'code' : query.code
             };
-            naver_access_token_query = 'https://nid.naver.com/oauth2.0/token?' + querystring.stringify(naver_access_token_query);
-            https.get(naver_access_token_query, function(response) {
+            var querystr = 'https://nid.naver.com/oauth2.0/token?' + querystring.stringify(naver_access_token_query);
+            https.get(querystr, function(response) {
                 var data = '';
                 response.on('data', function(chunk) {
                     data += chunk;
