@@ -133,16 +133,18 @@ function screenshotsv09(res, query, dbhandler) {
 function register_naver(res, query, dbhandler) {
     console.info('registering new user');
     var state_token = uuid.v4();
+    console.info('state_token = ' + state_token);
     var naver_register_query = {
         'client_id' : naver_consumer_key,
         'response_type' : 'code',
         'redirect_url' : 'http://moonrise.crudelis.kr/callback/naver',
         'state' : state_token
     };
-   var querystr = 'https://nid.naver.com/oauth2.0/authorize?' + querystring.stringify(naver_register_query);
+    var querystr = 'https://nid.naver.com/oauth2.0/authorize?' + querystring.stringify(naver_register_query);
+    console.info(querystr);
     res.writeHead(200, {'location' : 'www.naver.com'});//querystr
-    res.end();
-    dbhandler.insert('state_tokens', {'token' : state_token, 'date' : moment.utc().format('YYYY-MM-DD HH:mm:ss')});
+    res.end('Holy Damn');
+    dbhandler.insert('state_tokens', {'ind' : 0, 'token' : state_token, 'date' : moment.utc().format('YYYY-MM-DD HH:mm:ss')});
 }
 
 function callback_naver(res, query, dbhandler) {
@@ -169,7 +171,7 @@ function callback_naver(res, query, dbhandler) {
                 response.on('end', function() {
                     console.info('Registered new user!');
                     console.info('ACCESS_TOKEN = ' + data);
-                    dbhandler.insert('accounts', {'auth_host':'NAVER','access_token':data});
+                    dbhandler.insert('accounts', {'ind':0,'auth_host':'NAVER','access_token':data});
                     var account_query = {'token':data};
                     res.writeHead(200, {'location':'/account?'+querystring.stringify(account_query)});
                     res.end();

@@ -17,15 +17,16 @@ function createDatabases() {
 	query('CREATE TABLE screenshots ( ind INT AUTO_INCREMENT PRIMARY KEY, channel TINYTEXT, username TINYTEXT, address TINYTEXT, message TEXT, date DATETIME );');
 	query('CREATE TABLE screenshotsv09 ( ind INT AUTO_INCREMENT PRIMARY KEY, username VARCHAR(20), address TEXT, message TEXT, date DATETIME );');
 	query('CREATE TABLE webrequests ( ind INT AUTO_INCREMENT PRIMARY KEY, path TINYTEXT, query TINYTEXT, ip TINYTEXT, date DATETIME );');
-	query('CREATE TABLE state_tokens ( token CHAR(36), date DATETIME );');
-	query('CREATE TABLE accounts ( access_token TINYTEXT NOT NULL, auth_host VARCHAR(10) );');
-	query('CREATE TABLE nicknames ( access_token TINYTEXT NOT NULL, nick TINYTEXT NOT NULL );');
+	query('CREATE TABLE state_tokens ( ind INT AUTO_INCREMENT PRIMARY KEY, token CHAR(36), date DATETIME );');
+	query('CREATE TABLE accounts ( ind INT AUTO_INCREMENT PRIMARY KEY, access_token TINYTEXT NOT NULL, auth_host VARCHAR(10) );');
+	query('CREATE TABLE nicknames ( ind INT AUTO_INCREMENT PRIMARY KEY, access_token TINYTEXT NOT NULL, nick TINYTEXT NOT NULL );');
 }
 
 function query(msg) {
 	//console.info('mysql sending query');
     connection.query(msg, function(err, result) {
 		if (err) {
+			if (err.code == 'ER_TABLE_EXIST_ERROR') console.error(err['Error']);
 			console.error('mysql error while sending query');
 			console.error(err);
 		}
