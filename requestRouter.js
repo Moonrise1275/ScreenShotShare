@@ -1,5 +1,11 @@
+var https = require("https");
 var moment = require("moment-timezone");
 var fs = require("fs");
+var querystring = require("querystring");
+var uuid = require("node-uuid");
+
+var naver_consumer_key = 'MN720U_cgu6vQZ2femii';
+var naver_consumer_secret = 'ukENjpQmOu';
 
 var handle = {};
 handle['/'] = home;
@@ -7,6 +13,8 @@ handle['/home'] = home;
 handle['/favicon.ico'] = favicon;
 handle['/screenshots'] = screenshots;
 handle['/screenshots/v0.9'] = screenshotsv09;
+handle['/register/naver'] = register_naver;
+handle['/callback/naver'] = callback_naver;
 
 function route(res, path, query, dbhandler) {
     if (typeof handle[path] === 'function') {
@@ -119,6 +127,72 @@ function screenshotsv09(res, query, dbhandler) {
 		}
     }
     showImages(res, dbhandler, query);
+}
+
+function register_naver(res, query, dbhandler) {
+    var state_token = uuid.v4();
+    var naver_register_query = {
+        'client_id' : naver_consumer_key,
+        'response_type' : 'code',
+        'redirect_url' : 'http://moonrise.crudelis.kr/callback/naver',
+        'state' : state_token
+    };
+    naver_register_query = 'https://nid.naver.com/oauth2.0/authorize?' + querystring.stringify(naver_register_query);
+    res.writeHead(200, {'location' : naver_register_query});
+    res.end();
+    dbhandler.insert('state_tokens', {'token' : state_token, 'date' : moment.utc().format('YYYY-MM-DD HH:mm:ss')});
+}
+
+function callback_naver(res, query, dbhandler) {
+    dbhandler.selectWith('state_tokens', 'WHERE token = ' + query.state, function(array) {
+        if(array.length < 1) {
+            res.writeHead(401, {'Content-Type':'text/html'});
+            res.end('Login failed. Try again!');
+        } else {
+            dbhandler.remove('state_tokens', 'token = ' + query.state);
+            
+            var naver_access_token_query = {
+                'client_id' : naver_consumer_key,
+                'client_secret' : naver_consumer_secret,
+                'grant_type' : 'authorization_code',
+                'state' : query.state,
+                'code' : query.code
+            };
+            naver_access_token_query = 'https://nid.naver.com/oauth2.0/token?' + querystring.stringify(naver_access_token_query);
+            https.get(naver_access_token_query, function(response) {
+                var data = '';
+                response.on('data', function(chunk) {
+                    data += chunk;
+                });
+                response.on('end', function() {
+                    console.info('Registered new user!');
+                    console.info('ACCESS_TOKEN = ' + data);
+                    dbhandler.insert('accounts', {'auth_host':'NAVER','access_token':data});
+                    var account_query = {'token':data};
+                    res.writeHead(200, {'location':'/account?'+querystring.stringify(account_query)});
+                    res.end();
+                });
+            });
+        }
+    });
+}
+
+function account(res, query, dbhandler) {
+    if((typeof query === 'undefined') || (typeof query.token === 'undefined') || (query.token === '')) {
+        res.writeHead(401, {'location':'/'});
+        res.end();
+    } else {
+        res.writeHead(200, {'Content-Type':'text/html'});
+        fs.readFile('./account.html', 'utf8', function(err, data) {
+            if(err) {
+                console.error('error while showing account page');
+                console.error('token = ' + query.token);
+                console.error(err);
+            } else {
+                res.end(data);
+            }
+        });
+    }
 }
 
 exports.route = route;

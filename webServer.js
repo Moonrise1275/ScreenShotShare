@@ -4,7 +4,7 @@ var querystring = require("querystring");
 var moment = require("moment");
 
 var router = require("./requestRouter");
-var writer = require("./JSONWriter");
+//var writer = require("./JSONWriter");
 
 function start(config, dbhandler) {
     function onRequest(req, res) {
