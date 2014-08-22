@@ -209,7 +209,7 @@ function account(res, query, dbhandler) {
                         console.error(err);
                     } else {
                         var options = {'hostname':'apis.naver.com','path':'/nidlogin/nid/getUserProfile.xml','method':'GET'};
-                        options['headers'] = {'Authorization':query.token};
+                        options['headers'] = {'Authorization' : query.token};
                         var request = https.request(options, function(response) {
                             var data = '';
                             response.on('data', function(chunk) {
@@ -217,13 +217,15 @@ function account(res, query, dbhandler) {
                             });
                             response.on('end', function() {
                                 console.info('raw data: ' + data);
+                                res.writeHead(200, {'Content-Type':'text/html'});
+                                res.write(data);
+                                /*
                                 xml.parseString(data, function(err, xmldata) {
                                     if (err) {
                                         console.error('xml parse error while request naver account');
                                         console.error(err);
                                     } else {
-                                        console.info('xml data: ');
-                                        console.info(xmldata);
+                                        console.info('xml data: ' + JSON.stringify(xmldata));
                                         res.writeHead(200, {'Content-Type':'text/html'});
                                         
                                         res.write('<html><body>');
@@ -240,6 +242,7 @@ function account(res, query, dbhandler) {
                                         //res.end(data);
                                     }
                                 });
+                                */
                             });
                         });
                         request.on('error', function(err) {
