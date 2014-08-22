@@ -30,6 +30,7 @@ function start(config, dbhandler) {
     }
     
     var server = http.createServer(onRequest);
+    server.addListener('error', onError);
     var ip = process.env.OPENSHIFT_NODEJS_IP || config.webserver.ip;
     var port = process.env.OPENSHIFT_NODEJS_PORT || config.webserver.port;
     
