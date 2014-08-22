@@ -26,7 +26,7 @@ function query(msg) {
 	//console.info('mysql sending query');
     connection.query(msg, function(err, result) {
 		if (err) {
-			if (err.code == 'ER_TABLE_EXIST_ERROR') console.error(err['Error']);
+			if (err.errno == 1050) console.error(err['Error']);
 			console.error('mysql error while sending query');
 			console.error(err);
 		}
