@@ -217,24 +217,29 @@ function account(res, query, dbhandler) {
                             });
                             response.on('end', function() {
                                 console.info('raw data: ' + data);
-                                xml.parseString(data, function(xmldata) {
-                                    console.info('xml data: ' + xmldata);
-                                    res.writeHead(200, {'Content-Type':'text/html'});
-                                    
-                                    res.write('<html><body>');
-                                    res.write('nickname : ' + xmldata.response.nickname + '<br>');
-                                    res.write('e-mail : ' + xmldata.response.email + '<br>');
-                                    res.write('gender : ' + xmldata.response.gender + '<br>');
-                                    res.write('age : ' + xmldata.response.age + '<br>');
-                                    res.write('birthday : ' + xmldata.response.birthday + '<br>');
-                                    res.write('<image src = "' + xmldata.response['profile_image'] + '" style = "max-width: 100%; height: auto;"/> <p>');
-                                    
-                                    console.info(xmldata);
-                                    res.write(JSON.stringify(xmldata));
-                                    res.end();
-                                    //res.end(data);
+                                xml.parseString(data, function(err, xmldata) {
+                                    if (err) {
+                                        console.error('xml parse error while request naver account');
+                                        console.error(err);
+                                    } else {
+                                        console.info('xml data: ' + xmldata);
+                                        res.writeHead(200, {'Content-Type':'text/html'});
+                                        
+                                        res.write('<html><body>');
+                                        res.write('nickname : ' + xmldata.response.nickname + '<br>');
+                                        res.write('e-mail : ' + xmldata.response.email + '<br>');
+                                        res.write('gender : ' + xmldata.response.gender + '<br>');
+                                        res.write('age : ' + xmldata.response.age + '<br>');
+                                        res.write('birthday : ' + xmldata.response.birthday + '<br>');
+                                        res.write('<image src = "' + xmldata.response['profile_image'] + '" style = "max-width: 100%; height: auto;"/> <p>');
+                                        
+                                        console.info(xmldata);
+                                        res.write(JSON.stringify(xmldata));
+                                        res.end();
+                                        //res.end(data);
+                                    }
                                 });
-                            })
+                            });
                         });
                         request.on('error', function(err) {
                             console.error('error while requesting naver account');
