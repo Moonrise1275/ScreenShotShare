@@ -155,7 +155,7 @@ function callback_naver(res, query, dbhandler) {
             res.writeHead(401, {'Content-Type':'text/html'});
             res.end('Login failed. Try again!');
         } else {
-            dbhandler.remove('state_tokens', 'token = ' + query.state);
+            dbhandler.remove('state_tokens', 'token = "' + query.state + '"');
             
             var naver_access_token_query = {
                 'client_id' : naver_consumer_key,
@@ -222,7 +222,8 @@ function account(res, query, dbhandler) {
                                         console.error('xml parse error while request naver account');
                                         console.error(err);
                                     } else {
-                                        console.info('xml data: ' + xmldata);
+                                        console.info('xml data: ');
+                                        console.info(xmldata);
                                         res.writeHead(200, {'Content-Type':'text/html'});
                                         
                                         res.write('<html><body>');
