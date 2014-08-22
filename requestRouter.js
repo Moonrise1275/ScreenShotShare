@@ -197,7 +197,7 @@ function account(res, query, dbhandler) {
         res.writeHead(301, {'location':'/'});
         res.end();
     } else {
-        dbhandler.select('accounts', 'WHERE access_token = "' + query.token + '"', function(array) { 
+        dbhandler.selectWith('accounts', 'WHERE access_token = "' + query.token + '"', function(array) { 
             if (typeof array === 'undefined' || array.length < 1) {
                 res.writeHead(401, {'Content-Type':'text/html'});
                 res.end('You\'re not a member of this site!');
