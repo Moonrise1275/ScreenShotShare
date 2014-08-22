@@ -216,7 +216,9 @@ function account(res, query, dbhandler) {
                                 data += chunk;
                             });
                             response.on('end', function() {
+                                console.info('raw data: ' + data);
                                 xml.parseString(data, function(xmldata) {
+                                    console.info('xml data: ' + xmldata);
                                     res.writeHead(200, {'Content-Type':'text/html'});
                                     
                                     res.write('<html><body>');
