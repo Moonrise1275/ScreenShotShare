@@ -210,7 +210,7 @@ function account(res, query, dbhandler) {
                     } else {
                         var options = {'hostname':'apis.naver.com','path':'/nidlogin/nid/getUserProfile.xml','method':'GET'};
                         options['headers'] = {'Authorization':query.token};
-                        https.request(options, function(response) {
+                        var request = https.request(options, function(response) {
                             xml.parseString(response, function(xmldata) {
                                 res.writeHead(200, {'Content-Type':'text/html'});
                                 res.write('<html><body>');
@@ -223,6 +223,11 @@ function account(res, query, dbhandler) {
                                 //res.end(data);
                             });
                         });
+                        request.on('error', function(err) {
+                            console.error('error while requesting naver account');
+                            console.error(err);
+                        });
+                        request.end();
                     }
                 });
             }
