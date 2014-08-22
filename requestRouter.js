@@ -148,7 +148,7 @@ function register_naver(res, query, dbhandler) {
 }
 
 function callback_naver(res, query, dbhandler) {
-    dbhandler.selectWith('state_tokens', 'WHERE token = ' + query.state, function(array) {
+    dbhandler.selectWith('state_tokens', 'WHERE token = "' + query.state + '"', function(array) {
         if(typeof array === 'undefined' || array.length < 1) {
             res.writeHead(401, {'Content-Type':'text/html'});
             res.end('Login failed. Try again!');
