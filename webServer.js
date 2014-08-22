@@ -3,8 +3,8 @@ var url = require("url");
 var querystring = require("querystring");
 var moment = require("moment");
 
-var router = require("./requestRouter");
-//var writer = require("./JSONWriter");
+var rrouter = require("./requestRouter");
+//var erouter = require("./eventRouter");
 
 function start(config, dbhandler) {
     function onRequest(req, res) {
@@ -21,11 +21,20 @@ function start(config, dbhandler) {
 			dbhandler.insert('webrequests', ins);
 		}
         
-        router.route(res, path, query, dbhandler);
+        rrouter.route(res, path, query, dbhandler);
     }
+    
+    function onError(err) {
+        console.error('error while running web server');
+        console.error(err);
+    }
+    
     var server = http.createServer(onRequest);
     var ip = process.env.OPENSHIFT_NODEJS_IP || config.webserver.ip;
     var port = process.env.OPENSHIFT_NODEJS_PORT || config.webserver.port;
+    
+    
+    
     server.listen(port, ip);
 }
 
