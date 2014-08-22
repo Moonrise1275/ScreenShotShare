@@ -14,11 +14,12 @@ function start(config) {
 }
 
 function createDatabases() {
+	query('DROP TABLE state_tokens');
 	query('CREATE TABLE screenshots ( ind INT AUTO_INCREMENT PRIMARY KEY, channel TINYTEXT, username TINYTEXT, address TINYTEXT, message TEXT, date DATETIME );');
 	query('CREATE TABLE screenshotsv09 ( ind INT AUTO_INCREMENT PRIMARY KEY, username VARCHAR(20), address TEXT, message TEXT, date DATETIME );');
 	query('CREATE TABLE webrequests ( ind INT AUTO_INCREMENT PRIMARY KEY, path TINYTEXT, query TINYTEXT, ip TINYTEXT, date DATETIME );');
 	query('CREATE TABLE state_tokens ( ind INT AUTO_INCREMENT PRIMARY KEY, token CHAR(36), date DATETIME );');
-	query('CREATE TABLE accounts ( ind INT AUTO_INCREMENT PRIMARY KEY, access_token TINYTEXT NOT NULL, auth_host VARCHAR(10) );');
+	query('CREATE TABLE accounts ( ind INT AUTO_INCREMENT PRIMARY KEY, access_token TINYTEXT NOT NULL, refresh_token TINYTEXT, auth_host VARCHAR(10) );');
 	query('CREATE TABLE nicknames ( ind INT AUTO_INCREMENT PRIMARY KEY, access_token TINYTEXT NOT NULL, nick TINYTEXT NOT NULL );');
 }
 

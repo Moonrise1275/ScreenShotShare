@@ -58,13 +58,13 @@ function screenshots(res, query, dbhandler) {
             res.write('<html><body><form action = "/screenshots" name = "select" method = "get">Channel : <input type = "text" name = "channel" value = "');
             res.write(query.channel || '');
             res.write('"><br>Select nearest city<br>');
-            res.write(' Seoul<input type = "radio" name = "lang" value = "Asia/Seoul">')
-            res.write(' Los Angeles<input type = "radio" name = "lang" value = "America/Los_Angeles">')
-            res.write(' New York<input type = "radio" name = "lang" value = "America/New_York">')
-            res.write(' London<input type = "radio" name = "lang" value = "Europe/London">')
-            res.write(' Kairo<input type = "radio" name = "lang" value = "Africa/Cairo">')
-            res.write(' Kabul<input type = "radio" name = "lang" value = "Asia/Kabul">')
-            res.write(' Shanghai<input type = "radio" name = "lang" value = "Asia/Shanghai">')
+            res.write(' Seoul<input type = "radio" name = "lang" value = "Asia/Seoul">');
+            res.write(' Los Angeles<input type = "radio" name = "lang" value = "America/Los_Angeles">');
+            res.write(' New York<input type = "radio" name = "lang" value = "America/New_York">');
+            res.write(' London<input type = "radio" name = "lang" value = "Europe/London">');
+            res.write(' Kairo<input type = "radio" name = "lang" value = "Africa/Cairo">');
+            res.write(' Kabul<input type = "radio" name = "lang" value = "Asia/Kabul">');
+            res.write(' Shanghai<input type = "radio" name = "lang" value = "Asia/Shanghai">');
             res.write('<br>Username : <input type = "text" name = "username" value = "');
             res.write(query.username || '');
             res.write('"><br>Page : <input type = "text" name = "page" value = "');
@@ -169,12 +169,21 @@ function callback_naver(res, query, dbhandler) {
                     data += chunk;
                 });
                 response.on('end', function() {
-                    console.info('Registered new user!');
-                    console.info('ACCESS_TOKEN = ' + data);
-                    dbhandler.insert('accounts', {'ind':0,'auth_host':'NAVER','access_token':data});
-                    var account_query = {'token':data};
-                    res.writeHead(303, {'location':'/account?'+querystring.stringify(account_query)});
-                    res.end();
+                    var tokens = JSON.parse(data);
+                    dbhandler.selectWith('accounts','WHERE access_token = "' + tokens['access_token'] + '"', function(array) {
+                        if(typeof array === 'undefined' || array.length < 1) {
+                            console.info('Registered new user!');
+                            console.info('ACCESS_TOKEN = ' + tokens['access_token']);
+                            dbhandler.insert('accounts', {'ind':0,'auth_host':'NAVER','access_token':tokens['access_token'],'refresh_token':tokens['refresh_token']});
+                            var account_query = {'token':tokens['access_token']};
+                            res.writeHead(303, {'location':'/account?'+querystring.stringify(account_query)});
+                            res.end();
+                        } else {
+                            res.writeHead(401, {'Content-Type':'text/html'});
+                            res.end('You\'ve already registered!');
+                        }
+                    });
+                    
                 });
             });
         }
