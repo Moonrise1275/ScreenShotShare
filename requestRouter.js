@@ -211,25 +211,28 @@ function account(res, query, dbhandler) {
                         var options = {'hostname':'apis.naver.com','path':'/nidlogin/nid/getUserProfile.xml','method':'GET'};
                         options['headers'] = {'Authorization':query.token};
                         var request = https.request(options, function(response) {
-                            console.info(response);
-                            /*
-                            xml.parseString(response, function(xmldata) {
-                                res.writeHead(200, {'Content-Type':'text/html'});
-                                
-                                res.write('<html><body>');
-                                res.write('nickname : ' + xmldata.response.nickname + '<br>');
-                                res.write('e-mail : ' + xmldata.response.email + '<br>');
-                                res.write('gender : ' + xmldata.response.gender + '<br>');
-                                res.write('age : ' + xmldata.response.age + '<br>');
-                                res.write('birthday : ' + xmldata.response.birthday + '<br>');
-                                res.write('<image src = "' + xmldata.response['profile_image'] + '" style = "max-width: 100%; height: auto;"/> <p>');
-                                
-                                console.info(xmldata);
-                                res.write(JSON.stringify(xmldata));
-                                res.end();
-                                //res.end(data);
+                            var data = '';
+                            response.on('data', function(chunk) {
+                                data += chunk;
                             });
-                            */
+                            response.on('end', function() {
+                                xml.parseString(data, function(xmldata) {
+                                    res.writeHead(200, {'Content-Type':'text/html'});
+                                    
+                                    res.write('<html><body>');
+                                    res.write('nickname : ' + xmldata.response.nickname + '<br>');
+                                    res.write('e-mail : ' + xmldata.response.email + '<br>');
+                                    res.write('gender : ' + xmldata.response.gender + '<br>');
+                                    res.write('age : ' + xmldata.response.age + '<br>');
+                                    res.write('birthday : ' + xmldata.response.birthday + '<br>');
+                                    res.write('<image src = "' + xmldata.response['profile_image'] + '" style = "max-width: 100%; height: auto;"/> <p>');
+                                    
+                                    console.info(xmldata);
+                                    res.write(JSON.stringify(xmldata));
+                                    res.end();
+                                    //res.end(data);
+                                });
+                            })
                         });
                         request.on('error', function(err) {
                             console.error('error while requesting naver account');
