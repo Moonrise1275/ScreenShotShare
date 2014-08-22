@@ -211,8 +211,7 @@ function account(res, query, dbhandler) {
                         var options = {'hostname':'apis.naver.com','path':'/nidlogin/nid/getUserProfile.xml','method':'GET'};
                         options['headers'] = {'Authorization':query.token};
                         var request = https.request(options, function(response) {
-                            res.writeHead(200, {'Content-Type':'text/html'});
-                            res.end(response);
+                            console.info(response);
                             /*
                             xml.parseString(response, function(xmldata) {
                                 res.writeHead(200, {'Content-Type':'text/html'});
