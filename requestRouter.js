@@ -3,6 +3,8 @@ var moment = require("moment-timezone");
 var fs = require("fs");
 var querystring = require("querystring");
 var uuid = require("node-uuid");
+var xml2js = require("xml2js");
+var xml = new xml2js.Parser();
 
 var naver_consumer_key = 'MN720U_cgu6vQZ2femii';
 var naver_consumer_secret = 'ukENjpQmOu';
@@ -191,18 +193,38 @@ function callback_naver(res, query, dbhandler) {
 }
 
 function account(res, query, dbhandler) {
-    if((typeof query === 'undefined') || (typeof query.token === 'undefined') || (query.token === '')) {
+    if ((typeof query === 'undefined') || (typeof query.token === 'undefined') || (query.token === '')) {
         res.writeHead(301, {'location':'/'});
         res.end();
     } else {
-        res.writeHead(200, {'Content-Type':'text/html'});
-        fs.readFile('./account.html', 'utf8', function(err, data) {
-            if(err) {
-                console.error('error while showing account page');
-                console.error('token = ' + query.token);
-                console.error(err);
+        dbhandler.select('accounts', 'WHERE access_token = "' + query.token + '"', function(array) { 
+            if (typeof array === 'undefined' || array.length < 1) {
+                res.writeHead(401, {'Content-Type':'text/html'});
+                res.end('You\'re not a member of this site!');
             } else {
-                res.end(data);
+                fs.readFile('./account.html', 'utf8', function(err, data) {
+                    if (err) {
+                        console.error('error while showing account page');
+                        console.error('token = ' + query.token);
+                        console.error(err);
+                    } else {
+                        var options = {'hostname':'apis.naver.com','path':'/nidlogin/nid/getUserProfile.xml','method':'GET'};
+                        options['headers'] = {'Authorization':query.token};
+                        https.request(options, function(response) {
+                            xml.parseString(response, function(xmldata) {
+                                res.writeHead(200, {'Content-Type':'text/html'});
+                                res.write('<html><body>');
+                                res.write('nickname : ' + xmldata.response.nickname + '<br>');
+                                res.write('e-mail : ' + xmldata.response.email + '<br>');
+                                res.write('gender : ' + xmldata.response.gender + '<br>');
+                                res.write('age : ' + xmldata.response.age + '<br>');
+                                res.write('birthday : ' + xmldata.response.birthday + '<br>');
+                                res.write('<image src = "' + xmldata.response['profile_image'] + '" style = "max-width: 100%; height: auto;"/> <p>');
+                                //res.end(data);
+                            });
+                        });
+                    }
+                });
             }
         });
     }

@@ -28,8 +28,10 @@ function query(msg) {
     connection.query(msg, function(err, result) {
 		if (err) {
 			if (err.errno == 1050) console.error(err['Error']);
-			console.error('mysql error while sending query');
-			console.error(err);
+			else {
+				console.error('mysql error while sending query');
+				console.error(err);
+			}
 		}
 	});
 }
