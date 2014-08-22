@@ -173,7 +173,7 @@ function callback_naver(res, query, dbhandler) {
                     console.info('ACCESS_TOKEN = ' + data);
                     dbhandler.insert('accounts', {'ind':0,'auth_host':'NAVER','access_token':data});
                     var account_query = {'token':data};
-                    res.writeHead(200, {'location':'/account?'+querystring.stringify(account_query)});
+                    res.writeHead(303, {'location':'/account?'+querystring.stringify(account_query)});
                     res.end();
                 });
             });
@@ -183,7 +183,7 @@ function callback_naver(res, query, dbhandler) {
 
 function account(res, query, dbhandler) {
     if((typeof query === 'undefined') || (typeof query.token === 'undefined') || (query.token === '')) {
-        res.writeHead(401, {'location':'/'});
+        res.writeHead(301, {'location':'/'});
         res.end();
     } else {
         res.writeHead(200, {'Content-Type':'text/html'});
