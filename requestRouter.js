@@ -217,8 +217,8 @@ function account(res, query, dbhandler) {
                             });
                             response.on('end', function() {
                                 console.info('raw data: ' + data);
-                                res.writeHead(200, {'Content-Type':'text/html'});
-                                res.write(data);
+                                res.writeHead(200, {'Content-Type':'text'});
+                                res.end(data);
                                 /*
                                 xml.parseString(data, function(err, xmldata) {
                                     if (err) {
