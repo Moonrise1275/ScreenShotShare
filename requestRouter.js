@@ -6,8 +6,10 @@ var uuid = require("node-uuid");
 var xml2js = require("xml2js");
 var xml = new xml2js.Parser();
 
+var writer = require("./JSONWriter");
+
 var naver_consumer_key = 'MN720U_cgu6vQZ2femii';
-var naver_consumer_secret = 'ukENjpQmOu';
+var naver_consumer_secret = 'Q12mMpWN0J';
 
 var handle = {};
 handle['/'] = home;
@@ -198,10 +200,10 @@ function account(res, query, dbhandler) {
         res.end();
     } else {
         dbhandler.selectWith('accounts', 'WHERE access_token = "' + query.token + '"', function(array) { 
-            //if (typeof array === 'undefined' || array.length < 1) {
-                //res.writeHead(401, {'Content-Type':'text/html'});
-                //res.end('You\'re not a member of this site!');
-            //} else {
+            if (typeof array === 'undefined' || array.length < 1) {
+                res.writeHead(401, {'Content-Type':'text/html'});
+                res.end('You\'re not a member of this site!');
+            } else {
                 fs.readFile('./account.html', 'utf8', function(err, data) {
                     if (err) {
                         console.error('error while showing account page');
@@ -218,7 +220,16 @@ function account(res, query, dbhandler) {
                             response.on('end', function() {
                                 console.info('raw data: ' + data);
                                 res.writeHead(200, {'Content-Type':'text'});
-                                res.end(data);
+                                res.write(data);
+                                xml.parseString(data, function(err, xmldata) {
+                                    if(err) {
+                                        console.error(err);
+                                    } else {
+                                        var jsondata = writer.write(xmldata);
+                                        console.info('received data : ' + jsondata);
+                                        res.end(jsondata);
+                                    }
+                                });
                                 /*
                                 xml.parseString(data, function(err, xmldata) {
                                     if (err) {
@@ -252,7 +263,7 @@ function account(res, query, dbhandler) {
                         request.end();
                     }
                 });
-            //}
+            }
         });
     }
 }

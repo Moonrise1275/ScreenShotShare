@@ -1,8 +1,5 @@
-var fs = require("fs");
-
-function write(file, object, callback) {
-	var text = work(object, 0);
-	fs.writeFile(file, text, 'utf8', callback);
+function write(object) {
+	return work(object, 0);
 }
 
 function work(object, dep) {
