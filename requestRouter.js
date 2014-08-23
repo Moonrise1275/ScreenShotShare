@@ -17,8 +17,8 @@ handle['/screenshots'] = screenshots;
 handle['/screenshots/v0.9'] = screenshotsv09;
 //handle['/register/naver'] = register_naver;
 //handle['/callback/naver'] = callback_naver;
-handle['/auth/register/google'] = auth.register_google;
-handle['/auth/callback/google'] = auth.callback_google;
+handle['/register/google'] = auth.register_google;
+handle['/callback/google'] = auth.callback_google;
 handle['/account'] = auth.account;
 
 function route(res, path, query, dbhandler) {
