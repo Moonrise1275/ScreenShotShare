@@ -11,7 +11,7 @@ var params = {
     'google' : {
         'key' : '487794086365-74m62rib658iutgmo49aqvmnrn8e3ch8.apps.googleusercontent.com',
         'secret' : 'JF00nYI5lHLCUmllBJFoQGwT',
-        'callback' : 'http://moonrise.crudels.kr/auth/callback/google'
+        'callback' : 'http://moonrise.crudels.kr/callback/google'
     }
 }
 
