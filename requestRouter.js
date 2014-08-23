@@ -198,10 +198,10 @@ function account(res, query, dbhandler) {
         res.end();
     } else {
         dbhandler.selectWith('accounts', 'WHERE access_token = "' + query.token + '"', function(array) { 
-            if (typeof array === 'undefined' || array.length < 1) {
-                res.writeHead(401, {'Content-Type':'text/html'});
-                res.end('You\'re not a member of this site!');
-            } else {
+            //if (typeof array === 'undefined' || array.length < 1) {
+                //res.writeHead(401, {'Content-Type':'text/html'});
+                //res.end('You\'re not a member of this site!');
+            //} else {
                 fs.readFile('./account.html', 'utf8', function(err, data) {
                     if (err) {
                         console.error('error while showing account page');
@@ -252,7 +252,7 @@ function account(res, query, dbhandler) {
                         request.end();
                     }
                 });
-            }
+            //}
         });
     }
 }
