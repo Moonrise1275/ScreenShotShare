@@ -30,7 +30,7 @@ function query(msg) {
 			if (err.errno == 1050) console.error(err['Error']);
 			else {
 				console.error('mysql error while sending query');
-				console.error(err);
+			console.error(err);
 			}
 		}
 	});

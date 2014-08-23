@@ -1,15 +1,13 @@
-var https = require("https");
+//var https = require("https");
 var moment = require("moment-timezone");
 var fs = require("fs");
 var querystring = require("querystring");
-var uuid = require("node-uuid");
-var xml2js = require("xml2js");
-var xml = new xml2js.Parser();
+//var uuid = require("node-uuid");
+//var xml2js = require("xml2js");
+//var xml = new xml2js.Parser();
 
 var writer = require("./JSONWriter");
-
-var naver_consumer_key = 'MN720U_cgu6vQZ2femii';
-var naver_consumer_secret = 'Q12mMpWN0J';
+var auth = require("./auth");
 
 var handle = {};
 handle['/'] = home;
@@ -17,9 +15,11 @@ handle['/home'] = home;
 handle['/favicon.ico'] = favicon;
 handle['/screenshots'] = screenshots;
 handle['/screenshots/v0.9'] = screenshotsv09;
-handle['/register/naver'] = register_naver;
-handle['/callback/naver'] = callback_naver;
-handle['/account'] = account;
+//handle['/register/naver'] = register_naver;
+//handle['/callback/naver'] = callback_naver;
+handle['/auth/register/google'] = auth.register_google;
+handle['/auth/callback/google'] = auth.callback_google;
+handle['/account'] = auth.account;
 
 function route(res, path, query, dbhandler) {
     if (typeof handle[path] === 'function') {
@@ -134,6 +134,8 @@ function screenshotsv09(res, query, dbhandler) {
     showImages(res, dbhandler, query);
 }
 
+/*
+ * fuck you naver
 function register_naver(res, query, dbhandler) {
     console.info('registering new user');
     var state_token = uuid.v4().split('-')[0];
@@ -222,16 +224,6 @@ function account(res, query, dbhandler) {
                                 res.writeHead(200, {'Content-Type':'text'});
                                 res.write(data);
                                 xml.parseString(data, function(err, xmldata) {
-                                    if(err) {
-                                        console.error(err);
-                                    } else {
-                                        var jsondata = writer.write(xmldata);
-                                        console.info('received data : ' + jsondata);
-                                        res.end(jsondata);
-                                    }
-                                });
-                                /*
-                                xml.parseString(data, function(err, xmldata) {
                                     if (err) {
                                         console.error('xml parse error while request naver account');
                                         console.error(err);
@@ -253,7 +245,7 @@ function account(res, query, dbhandler) {
                                         //res.end(data);
                                     }
                                 });
-                                */
+                                
                             });
                         });
                         request.on('error', function(err) {
@@ -267,5 +259,8 @@ function account(res, query, dbhandler) {
         });
     }
 }
+*/
+
+
 
 exports.route = route;
