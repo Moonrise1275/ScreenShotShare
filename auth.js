@@ -23,6 +23,7 @@ function register_google(res, query, dbhandler) {
         'state' : state_token
     }
     var loginuri = 'https://accounts.google.com/o/oauth2/auth?' + querystring.stringify(getparams);
+    dbhandler.insert('state_tokens', {'ind':0,'token':state_token});
     res.writeHead(301, {'location':loginuri});
     res.end();
 }
