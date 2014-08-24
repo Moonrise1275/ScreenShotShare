@@ -15,9 +15,8 @@ handle['/home'] = home;
 handle['/favicon.ico'] = favicon;
 handle['/screenshots'] = screenshots;
 handle['/screenshots/v0.9'] = screenshotsv09;
-//handle['/register/naver'] = register_naver;
-//handle['/callback/naver'] = callback_naver;
 handle['/register/google'] = auth.register_google;
+handle['/register/google/force'] = auth.force_register_google;
 handle['/callback/google'] = auth.callback_google;
 handle['/account'] = auth.account;
 
@@ -46,10 +45,7 @@ function favicon(res, query, dbhandler) {
 
 function screenshots(res, query, dbhandler) {
     function showImage(res, obj) {
-        //var months = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'];
         var describe = '[' + obj.channel + '] ' + obj.username + ' : ' + obj.message + ' - ';
-        //describe += obj.date.getFullYear() + '.' + months[obj.date.getMonth()] + '.' + obj.date.getDate() + ' ';
-        //describe += obj.date.getHours() + ':' + obj.date.getMinutes() + ':' + obj.date.getSeconds() + '<br>';
         describe += moment.utc(obj.date).tz(query.lang || 'Asia/Seoul').format('YYYY.MM.DD HH:mm:ss z') + '<br>';
         res.write(describe);
         var image = '<image src = "' + obj.address + '" style = "max-width: 100%; height: auto;"/> <p>';
@@ -133,134 +129,5 @@ function screenshotsv09(res, query, dbhandler) {
     }
     showImages(res, dbhandler, query);
 }
-
-/*
- * fuck you naver
-function register_naver(res, query, dbhandler) {
-    console.info('registering new user');
-    var state_token = uuid.v4().split('-')[0];
-    console.info('state_token = ' + state_token);
-    var naver_register_query = {
-        'client_id' : naver_consumer_key,
-        'response_type' : 'code',
-        'redirect_uri' : 'http://moonrise.crudelis.kr/callback/naver',
-        'state' : state_token
-    };
-    var querystr = 'https://nid.naver.com/oauth2.0/authorize?' + querystring.stringify(naver_register_query);
-    console.info(querystr);
-    res.writeHead(303, {'location' : querystr});
-    res.end();
-    dbhandler.insert('state_tokens', {'ind' : 0, 'token' : state_token, 'date' : moment.utc().format('YYYY-MM-DD HH:mm:ss')});
-}
-
-function callback_naver(res, query, dbhandler) {
-    dbhandler.selectWith('state_tokens', 'WHERE token = "' + query.state + '"', function(array) {
-        if(typeof array === 'undefined' || array.length < 1) {
-            res.writeHead(401, {'Content-Type':'text/html'});
-            res.end('Login failed. Try again!');
-        } else {
-            dbhandler.remove('state_tokens', 'token = "' + query.state + '"');
-            
-            var naver_access_token_query = {
-                'client_id' : naver_consumer_key,
-                'client_secret' : naver_consumer_secret,
-                'grant_type' : 'authorization_code',
-                'state' : query.state,
-                'code' : query.code
-            };
-            var querystr = 'https://nid.naver.com/oauth2.0/token?' + querystring.stringify(naver_access_token_query);
-            https.get(querystr, function(response) {
-                var data = '';
-                response.on('data', function(chunk) {
-                    data += chunk;
-                });
-                response.on('end', function() {
-                    var tokens = JSON.parse(data);
-                    dbhandler.selectWith('accounts','WHERE access_token = "' + tokens['access_token'] + '"', function(array) {
-                        if(typeof array === 'undefined' || array.length < 1) {
-                            console.info('Registered new user!');
-                            console.info('ACCESS_TOKEN = ' + tokens['access_token']);
-                            dbhandler.insert('accounts', {'ind':0,'auth_host':'NAVER','access_token':tokens['access_token'],'refresh_token':tokens['refresh_token']});
-                            var account_query = {'token':tokens['access_token']};
-                            res.writeHead(303, {'location':'/account?'+querystring.stringify(account_query)});
-                            res.end();
-                        } else {
-                            res.writeHead(401, {'Content-Type':'text/html'});
-                            res.end('You\'ve already registered!');
-                        }
-                    });
-                    
-                });
-            });
-        }
-    });
-}
-
-function account(res, query, dbhandler) {
-    if ((typeof query === 'undefined') || (typeof query.token === 'undefined') || (query.token === '')) {
-        res.writeHead(301, {'location':'/'});
-        res.end();
-    } else {
-        dbhandler.selectWith('accounts', 'WHERE access_token = "' + query.token + '"', function(array) { 
-            if (typeof array === 'undefined' || array.length < 1) {
-                res.writeHead(401, {'Content-Type':'text/html'});
-                res.end('You\'re not a member of this site!');
-            } else {
-                fs.readFile('./account.html', 'utf8', function(err, data) {
-                    if (err) {
-                        console.error('error while showing account page');
-                        console.error('token = ' + query.token);
-                        console.error(err);
-                    } else {
-                        var options = {'hostname':'apis.naver.com','path':'/nidlogin/nid/getUserProfile.xml','method':'GET'};
-                        options['headers'] = {'Authorization' : query.token};
-                        var request = https.request(options, function(response) {
-                            var data = '';
-                            response.on('data', function(chunk) {
-                                data += chunk;
-                            });
-                            response.on('end', function() {
-                                console.info('raw data: ' + data);
-                                res.writeHead(200, {'Content-Type':'text'});
-                                res.write(data);
-                                xml.parseString(data, function(err, xmldata) {
-                                    if (err) {
-                                        console.error('xml parse error while request naver account');
-                                        console.error(err);
-                                    } else {
-                                        console.info('xml data: ' + JSON.stringify(xmldata));
-                                        res.writeHead(200, {'Content-Type':'text/html'});
-                                        
-                                        res.write('<html><body>');
-                                        res.write('nickname : ' + xmldata.response.nickname + '<br>');
-                                        res.write('e-mail : ' + xmldata.response.email + '<br>');
-                                        res.write('gender : ' + xmldata.response.gender + '<br>');
-                                        res.write('age : ' + xmldata.response.age + '<br>');
-                                        res.write('birthday : ' + xmldata.response.birthday + '<br>');
-                                        res.write('<image src = "' + xmldata.response['profile_image'] + '" style = "max-width: 100%; height: auto;"/> <p>');
-                                        
-                                        console.info(xmldata);
-                                        res.write(JSON.stringify(xmldata));
-                                        res.end();
-                                        //res.end(data);
-                                    }
-                                });
-                                
-                            });
-                        });
-                        request.on('error', function(err) {
-                            console.error('error while requesting naver account');
-                            console.error(err);
-                        });
-                        request.end();
-                    }
-                });
-            }
-        });
-    }
-}
-*/
-
-
 
 exports.route = route;
