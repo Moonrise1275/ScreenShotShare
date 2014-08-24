@@ -43,7 +43,8 @@ function insert(table, object, callback) {
 			console.error('mysql error while sending insert query');
 			console.error(err);
 		} else {
-			callback(result);
+			if (typeof callback === 'function')
+				callback(result);
 		}
 	});
 }
