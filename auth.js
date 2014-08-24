@@ -24,6 +24,7 @@ function register_google(res, query, dbhandler) {
         'scope' : 'https://www.googleapis.com/auth/plus.me',
         'state' : state_token
     });
+    console.info('reqUrl: ' + reqUrl);
     dbhandler.insert('state_tokens', {'ind':0,'token':state_token,'date':moment.utc().format('YYYY-MM-DD HH:mm:ss')});
     res.writeHead(303, {'location' : reqUrl});
     res.end();
