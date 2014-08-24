@@ -58,7 +58,7 @@ function account(res, query, dbhandler) {
                 res.end('Invalid login! Try again');
             } else {
                 var oauth2Client = new goauth2(params.google.key, params.google.secret, params.google.callback);
-                oauth2Client.setCredentials({'access_token':array[1].access_token,'refresh_token':array[1].refresh_token});
+                oauth2Client.setCredentials({'access_token':array[0].access_token,'refresh_token':array[0].refresh_token});
                 plus.people.get({'userId':'me','auth':oauth2Client}, function(err, profile) {
                     if (err) {
                         console.error('error while getting google account informations');
