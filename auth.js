@@ -33,7 +33,7 @@ function register_google(res, query, dbhandler) {
         'response_type' : 'code',
         'redirect_uri' : params.google.callback,
         'scope' : 'https://www.googleapis.com/auth/plus.me',
-        'state_token' : state_token
+        'state' : state_token
     };
     var reqUrl = 'https://accounts.google.com/o/oauth2/auth?' + querystring.stringify(queryobj);
     console.info('reqUrl: ' + reqUrl);
