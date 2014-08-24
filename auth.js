@@ -20,7 +20,6 @@ function register_google(res, query, dbhandler) {
     var oauth2Client = new goauth2(params.google.key, params.google.secret, params.google.callback);
     var state_token = uuid.v4();
     var reqUrl = oauth2Client.generateAuthUrl({
-        'access_type' : 'offline',
         'scope' : 'https://www.googleapis.com/auth/plus.me',
         'state' : state_token
     });
