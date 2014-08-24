@@ -9,9 +9,9 @@ var plus = google.plus('v1');
 
 var params = {
     'google' : {
-        'key' : '487794086365-74m62rib658iutgmo49aqvmnrn8e3ch8.apps.googleusercontent.com',
-        'secret' : 'JF00nYI5lHLCUmllBJFoQGwT',
-        'callback' : 'http://moonrise.crudels.kr/callback/google'
+        'key' : '487794086365-b7c974kegl3orplklrg8aq0072mnp60e.apps.googleusercontent.com',
+        'secret' : 'W4ngmunotOKfK0oLBLeaxBJP',
+        'callback' : 'http://moonrise.crudelis.kr/callback/google'
     }
 }
 
