@@ -36,12 +36,14 @@ function query(msg) {
 	});
 }
 
-function insert(table, object) {
+function insert(table, object, callback) {
 	//console.info('mysql sending insert query');
     connection.query('INSERT INTO ' + table + ' SET ?', object, function(err, result) {
 		if (err) {
 			console.error('mysql error while sending insert query');
 			console.error(err);
+		} else {
+			callback(result);
 		}
 	});
 }
