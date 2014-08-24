@@ -1,12 +1,13 @@
 var uuid = require("node-uuid");
 var moment = require("moment-timezone");
 var querystring = require("querystring");
+var https = require("https");
 
 var writer = require("./JSONWriter");
 
-var google = require("googleapis");
-var goauth2 = google.auth.OAuth2;
-var plus = google.plus('v1');
+//var google = require("googleapis");
+//var goauth2 = google.auth.OAuth2;
+//var plus = google.plus('v1');
 
 var params = {
     'google' : {
@@ -17,6 +18,7 @@ var params = {
 }
 
 function register_google(res, query, dbhandler) {
+    /*
     var oauth2Client = new goauth2(params.google.key, params.google.secret, params.google.callback);
     var state_token = uuid.v4();
     var reqUrl = oauth2Client.generateAuthUrl({
@@ -24,6 +26,15 @@ function register_google(res, query, dbhandler) {
         'scope' : 'https://www.googleapis.com/auth/plus.me',
         'state' : state_token
     });
+    */
+    var state_token = uuid.v4();
+    var queryobj = {
+        'client_id' : params.google.key,
+        'response_type' : 'code',
+        'redirect_uri' : params.google.callback,
+        'scope' : 'https://www.googleapis.com/auth/plus.me'
+    };
+    var reqUrl = 'https://accounts.google.com/o/oauth2/auth?' + querystring.stringify(queryobj);
     console.info('reqUrl: ' + reqUrl);
     dbhandler.insert('state_tokens', {'ind':0,'token':state_token,'date':moment.utc().format('YYYY-MM-DD HH:mm:ss')});
     res.writeHead(303, {'location' : reqUrl});
@@ -32,6 +43,45 @@ function register_google(res, query, dbhandler) {
 
 function callback_google(res, query, dbhandler) {
     console.info('callback_google: ' + writer.write(query));
+    dbhandler.selectWith('state_tokens', 'WHERE token = "' + query.state + '"', function(array) {
+        if (typeof array === 'undefined' || array.length < 1) {
+            res.writeHead(401, {'Content-Type':'text/html'});
+            res.end('Invalid callback! Try again.');
+        } else {
+            dbhandler.remove('state_tokens', 'token = "' + query.state + '"');
+            var postoption = {
+                'hostname' : 'accounts.google.com',
+                'path' : '/o/oauth2/token',
+                'method' : 'POST',
+                'headers' : {
+                    'Content-Type' : 'application/x-www-form-urlencoded'
+                }
+            };
+            var post = https.request(postoption, function(response) {
+               var data = '';
+               response.on('data', function(chunk) {
+                   data += chunk;
+               });
+               response.on('end', function() {
+                   console.info('access_token and more : ' + writer.write(JSON.parse(data)));
+                   
+               });
+            });
+            post.on('error', function(err) {
+                console.error('error on post access token getter to google');
+                console.error(err);
+            });
+            post.write(querystring.stringify({
+                'code' : query.code,
+                'client_id' : params.google.key,
+                'client_secret' : params.google.secret,
+                'redirect_uri' : params.google.callback,
+                'grant_type' : 'authorization_code'
+            }));
+            post.end();
+        }
+    });
+    /*
     var oauth2Client = new goauth2(params.google.key, params.google.secret, params.google.callback);
     dbhandler.selectWith('state_tokens', 'WHERE token = "' + query.state + '"', function(array) {
         if (typeof array === 'undefined' || array.length < 1) {
@@ -48,6 +98,7 @@ function callback_google(res, query, dbhandler) {
             });
         }
     });
+    */
 }
 
 function account(res, query, dbhandler) {
