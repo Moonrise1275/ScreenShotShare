@@ -30,6 +30,7 @@ function register_google(res, query, dbhandler) {
 }
 
 function callback_google(res, query, dbhandler) {
+    console.info('callback_google: ' + writer.write(query));
     var oauth2Client = new goauth2(params.google.key, params.google.secret, params.google.callback);
     dbhandler.selectWith('state_tokens', 'WHERE token = "' + query.state + '"', function(array) {
         if (typeof array === 'undefined' || array.length < 1) {
@@ -38,6 +39,7 @@ function callback_google(res, query, dbhandler) {
         } else {
             dbhandler.remove('state_tokens', 'token = "' + query.state + '"');
             oauth2Client.getToken(query.code, function(err, tokens) {
+                console.info('tokens: ' + writer.write(tokens));
                dbhandler.insert('accounts', {'ind':0,'access_token':tokens['access_token'],'refresh_token':tokens['refresh_token']});
                var querys = {'token':tokens['access_token']};
                res.writeHead(303, {'location':'/account?' + querystring.stringify(querys)});
