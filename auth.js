@@ -60,8 +60,13 @@ function account(res, query, dbhandler) {
                 var oauth2Client = new goauth2(params.google.key, params.google.secret, params.google.callback);
                 oauth2Client.setCredentials({'access_token':array['access_token'],'refresh_token':array['refresh_token']});
                 plus.people.get({'userId':'me','auth':oauth2Client}, function(err, profile) {
-                    res.writeHead(200, {'Content-Type':'text/html'});
-                    res.end(writer.write(profile));
+                    if (err) {
+                        console.error('error while getting google account informations');
+                        console.error(err);
+                    } else {
+                        res.writeHead(200, {'Content-Type':'text/html'});
+                        res.end(writer.write(profile));
+                    }
                 })
             }
         })
