@@ -45,7 +45,7 @@ function force_register_google(res, query, dbhandler) {
 }
 
 function callback_google(res, query, dbhandler) {
-    dbhandler.selectWith('state_tokens', 'WHERE token = "' + query.state + '"', function(array) {
+    dbhandler.selectWith('state_tokens', 'WHERE token = "' + query.state + '";', function(array) {
         if (typeof array === 'undefined' || array.length < 1) {
             res.writeHead(401, {'Content-Type':'text/html'});
             res.write('Invalid callback! Try again.');
@@ -67,7 +67,7 @@ function callback_google(res, query, dbhandler) {
                 });
                 response.on('end', function() {
                     var tokens = JSON.parse(data);
-                    dbhandler.selectWith('accounts', 'WHERE access_token = "' + tokens['access_token'] + '"', function(array) {
+                    dbhandler.selectWith('accounts', 'WHERE access_token = "' + tokens['access_token'] + '";', function(array) {
                         if (typeof array === 'undefined' || array.length < 1) {
                             if (typeof tokens['refresh_token'] === 'undefined') {
                                 res.writeHead(401, {'Content-Type':'text/html'});
@@ -100,7 +100,7 @@ function callback_google(res, query, dbhandler) {
                                     resp.on('end', function() {
                                         var new_token = JSON.parse(data)['access_token'];
                                         s_tokens.access_token = new_token;
-                                        dbhandler.update('accounts', 'access_token', new_token, 'refresh_token = "' + s_tokens.refresh_token + '"');
+                                        dbhandler.update('accounts', 'access_token', new_token, 'refresh_token = "' + s_tokens.refresh_token + '";');
                                     });
                                 });
                                 post_req.write(querystring.stringify({
@@ -144,7 +144,7 @@ function account(res, query, dbhandler) {
         res.end();
     } else {
        var acnt = {};
-       dbhandler.selectWith('accounts', 'WHERE userid = "' + query.userid + '"', function(array) {
+       dbhandler.selectWith('accounts', 'WHERE userid = "' + query.userid + '";', function(array) {
            if (typeof array === 'undefined' || array.length < 1) {
                 res.writeHead(401, {'Content-Type':'text/html'});
                 res.end('You\'re not a member of this site!');

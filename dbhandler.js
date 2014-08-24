@@ -58,7 +58,7 @@ function selectWith(table, postfix, callback) {
 }
 
 function select(table, callback) {
-    selectWith(table, '', callback);
+    selectWith(table, ';', callback);
 }
 
 function remove(table, condition) {
