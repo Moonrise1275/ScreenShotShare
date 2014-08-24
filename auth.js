@@ -169,8 +169,11 @@ function account(res, query, dbhandler) {
                    response.on('end', function() {
                        var profile = JSON.parse(data);
                        res.writeHead(200, {'Content-Type':'text/html'});
-                       res.write('Real name : ' + profile.displayName);
-                       res.write('Nickname : ' + profile.nickname);
+                       res.write('<html><body>');
+                       res.write('Real name : ' + profile.displayName + '<br>');
+                       res.write('Nickname : ' + profile.nickname + '<br>');
+                       res.write(writer.write(profile));
+                       res.write('</body></html>');
                        res.end();
                    });
                 }).end();
