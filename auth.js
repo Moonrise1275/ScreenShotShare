@@ -41,6 +41,7 @@ function force_register_google(res, query, dbhandler) {
         'approval_prompt' : 'force'
     };
     var loginuri = 'https://accounts.google.com/o/oauth2/auth?' + querystring.stringify(getparams);
+    console.info('Saving state token(force) - ' + state_token);
     dbhandler.insert('state_tokens', {'ind':0,'token':state_token});
     res.writeHead(301, {'location':loginuri});
     res.end();

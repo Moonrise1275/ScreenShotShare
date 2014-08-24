@@ -21,6 +21,7 @@ handle['/callback/google'] = auth.callback_google;
 handle['/account'] = auth.account;
 
 function route(res, path, query, dbhandler) {
+    console.info('path: ' + path);
     if (typeof handle[path] === 'function') {
         handle[path](res, query, dbhandler);
     } else {
