@@ -23,6 +23,7 @@ function register_google(res, query, dbhandler) {
         'state' : state_token
     }
     var loginuri = 'https://accounts.google.com/o/oauth2/auth?' + querystring.stringify(getparams);
+    console.info('Saving state token - ' + state_token);
     dbhandler.insert('state_tokens', {'ind':0,'token':state_token});
     res.writeHead(301, {'location':loginuri});
     res.end();
@@ -50,7 +51,7 @@ function callback_google(res, query, dbhandler) {
         if (typeof array === 'undefined' || array.length < 1) {
             res.writeHead(401, {'Content-Type':'text/html'});
             res.write('Invalid callback! Try again.');
-            res.end('<html><body><a href="/register/google">Click me!</a></body></html>');
+            res.end('<html><body><br><a href="/register/google">Click me!</a></body></html>');
         } else {
             var postoptions = {
                 'host' : 'accounts.google.com',
@@ -73,7 +74,7 @@ function callback_google(res, query, dbhandler) {
                             if (typeof tokens['refresh_token'] === 'undefined') {
                                 res.writeHead(401, {'Content-Type':'text/html'});
                                 res.write('Invalid login! Try again.');
-                                res.end('<html><body><a href="/register/google/force">Click me!</a></body></html>');
+                                res.end('<html><body><br><a href="/register/google/force">Click me!</a></body></html>');
                             } else {
                                 var userid = uuid.v4();
                                 dbhandler.insert('accounts', {'ind':0,'access_token':tokens['access_token'],'refresh_token':tokens['refresh_token'],'userid':userid});
