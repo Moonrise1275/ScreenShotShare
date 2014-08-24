@@ -20,6 +20,7 @@ function register_google(res, query, dbhandler) {
     var oauth2Client = new goauth2(params.google.key, params.google.secret, params.google.callback);
     var state_token = uuid.v4();
     var reqUrl = oauth2Client.generateAuthUrl({
+        'access_type' : 'offline',
         'scope' : 'https://www.googleapis.com/auth/plus.me',
         'state' : state_token
     });
@@ -39,10 +40,10 @@ function callback_google(res, query, dbhandler) {
             dbhandler.remove('state_tokens', 'token = "' + query.state + '"');
             oauth2Client.getToken(query.code, function(err, tokens) {
                 console.info('tokens: ' + writer.write(tokens));
-               dbhandler.insert('accounts', {'ind':0,'access_token':tokens['access_token'],'refresh_token':tokens['refresh_token']});
-               var querys = {'token':tokens['access_token']};
-               res.writeHead(303, {'location':'/account?' + querystring.stringify(querys)});
-               res.end();
+                dbhandler.insert('accounts', {'ind':0,'access_token':tokens['access_token'],'refresh_token':tokens['refresh_token']});
+                var querys = {'token':tokens['access_token']};
+                res.writeHead(303, {'location':'/account?' + querystring.stringify(querys)});
+                res.end();
             });
         }
     });
