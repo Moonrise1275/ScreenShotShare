@@ -25,8 +25,8 @@ function register_google(res, query, dbhandler) {
     var loginuri = 'https://accounts.google.com/o/oauth2/auth?' + querystring.stringify(getparams);
     console.info('Saving state token - ' + state_token);
     dbhandler.insert('state_tokens', {'ind':0,'token':state_token}, function() {
-        res.writeHead(301, {'location':loginuri});
-        res.end();
+        res.writeHead(200, {'Content-Type':'text/html'});
+        res.end('<html><body><br><a href="' + loginuri + '">Click me!</a></body></html>');
     });
 }
 
@@ -44,8 +44,8 @@ function force_register_google(res, query, dbhandler) {
     var loginuri = 'https://accounts.google.com/o/oauth2/auth?' + querystring.stringify(getparams);
     console.info('Saving state token(force) - ' + state_token);
     dbhandler.insert('state_tokens', {'ind':0,'token':state_token});
-    res.writeHead(301, {'location':loginuri});
-    res.end();
+    res.writeHead(200, {'Content-Type':'text/html'});
+    res.end('<html><body><br><a href="' + loginuri + '">Click me!</a></body></html>');
 }
 
 function callback_google(res, query, dbhandler) {
