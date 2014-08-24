@@ -156,6 +156,7 @@ function account(res, query, dbhandler) {
                 acnt = array[0];
                 var getoptions = {
                    'method' : 'GET',
+                   'encoding' : 'utf8',
                    'host' : 'www.googleapis.com',
                    'path' : '/plus/v1/people/me?' + querystring.stringify({
                        'access_token' : acnt['access_token']
