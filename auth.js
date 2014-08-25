@@ -9,28 +9,28 @@ var params = {
     'google' : {
         'key' : '487794086365-b7c974kegl3orplklrg8aq0072mnp60e.apps.googleusercontent.com',
         'secret' : 'W4ngmunotOKfK0oLBLeaxBJP',
-        'callback' : 'http://moonrise.crudelis.kr/callback/google'
+        'callback' : 'http://moonrise.crudelis.kr/callback/google',
+        'image' : 'https://developers.google.com/+/images/branding/sign-in-buttons/Red-signin_Long_base_44dp.png'
     }
-}
+};
 
-function register_google(res, query, dbhandler) {
+function register(res, query, dbhandler) {
     var state_token = uuid.v4();
-    var getparams = {
+    var googleparams = {
         'client_id' : params.google.key,
         'response_type' : 'code',
         'scope' : 'https://www.googleapis.com/auth/plus.me',
         'redirect_uri' : params.google.callback,
         'state' : state_token
-    }
-    var loginuri = 'https://accounts.google.com/o/oauth2/auth?' + querystring.stringify(getparams);
+    };
+    var googleuri = 'https://accounts.google.com/o/oauth2/auth?' + querystring.stringify(googleparams);
     console.info('Saving state token - ' + state_token);
-    dbhandler.insert('state_tokens', {'ind':0,'token':state_token}, function() {
-        res.writeHead(200, {'Content-Type':'text/html'});
-        res.end('<html><body><br><a href="' + loginuri + '">Click me!</a></body></html>');
-    });
+    dbhandler.insert('state_tokens', {'ind':0,'token':state_token});
+    res.writeHead(200, {'Content-Type':'text/html'});
+    res.end('<html><body><br><a href="' + googleuri + '"><image src = "' + params.google.image + '" style = "max-width: 50%; height: auto;"/><p></a></body></html>');
 }
 
-function force_register_google(res, query, dbhandler) {
+function force_register(res, query, dbhandler) {
     var state_token = uuid.v4();
     var getparams = {
         'client_id' : params.google.key,
@@ -41,11 +41,11 @@ function force_register_google(res, query, dbhandler) {
         'access_type' : 'offline',
         'approval_prompt' : 'force'
     };
-    var loginuri = 'https://accounts.google.com/o/oauth2/auth?' + querystring.stringify(getparams);
+    var googleuri = 'https://accounts.google.com/o/oauth2/auth?' + querystring.stringify(getparams);
     console.info('Saving state token(force) - ' + state_token);
     dbhandler.insert('state_tokens', {'ind':0,'token':state_token});
     res.writeHead(200, {'Content-Type':'text/html'});
-    res.end('<html><body><br><a href="' + loginuri + '">Click me!</a></body></html>');
+    res.end('<html><body><br><a href="' + googleuri + '"><image src = "' + params.google.image + '" style = "max-width: 50%; height: auto;"/><p></a></body></html>');
 }
 
 function callback_google(res, query, dbhandler) {
@@ -53,7 +53,7 @@ function callback_google(res, query, dbhandler) {
         if (typeof array === 'undefined' || array.length < 1) {
             res.writeHead(401, {'Content-Type':'text/html'});
             res.write('Invalid callback! Try again.');
-            res.end('<html><body><br><a href="/register/google">Click me!</a></body></html>');
+            res.end('<html><body><br><a href="/register">Click me!</a></body></html>');
         } else {
             var postoptions = {
                 'host' : 'accounts.google.com',
@@ -77,10 +77,10 @@ function callback_google(res, query, dbhandler) {
                                if (typeof tokens['refresh_token'] === 'undefined') {
                                    res.writeHead(401, {'Content-Type':'text/html'});
                                    res.write('Invalid login! Try again.');
-                                   res.end('<html><body><br><a href="/register/google/force">Click me!</a></body></html>');
+                                   res.end('<html><body><br><a href="/register/force">Click me!</a></body></html>');
                                } else {
                                    var userid = uuid.v4();
-                                   dbhandler.insert('accounts', {'ind':0,'userid':userid,'login_id':profile.id,'refresh_token':tokens.refresh_token});
+                                   dbhandler.insert('accounts', {'ind':0,'userid':userid,'login_id':profile.id,'refresh_token':tokens.refresh_token,'login_provider':'GOOGLE'});
                                    var queryparams = {'userid':userid};
                                    res.writeHead(301, {'location':'/account?' + querystring.stringify(queryparams)});
                                    res.end();
@@ -193,7 +193,7 @@ function account(res, query, dbhandler) {
     }
 }
 
-exports.register_google = register_google;
-exports.force_register_google = force_register_google;
+exports.register = register;
+exports.force_register = force_register;
 exports.callback_google = callback_google;
 exports.account = account;

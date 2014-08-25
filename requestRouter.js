@@ -15,8 +15,8 @@ handle['/home'] = home;
 handle['/favicon.ico'] = favicon;
 handle['/screenshots'] = screenshots;
 handle['/screenshots/v0.9'] = screenshotsv09;
-handle['/register/google'] = auth.register_google;
-handle['/register/google/force'] = auth.force_register_google;
+handle['/register'] = auth.register;
+handle['/register/force'] = auth.force_register;
 handle['/callback/google'] = auth.callback_google;
 handle['/account'] = auth.account;
 
