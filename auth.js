@@ -1,6 +1,7 @@
 var uuid = require("node-uuid");
 var moment = require("moment-timezone");
 var querystring = require("querystring");
+var http = require("http");
 var https = require("https");
 
 var writer = require("./JSONWriter");
@@ -71,58 +72,27 @@ function callback_google(res, query, dbhandler) {
                 });
                 response.on('end', function() {
                     var tokens = JSON.parse(data);
-                    dbhandler.selectWith('accounts', 'WHERE access_token = "' + tokens['access_token'] + '";', function(array) {
-                        if (typeof array === 'undefined' || array.length < 1) {
-                            if (typeof tokens['refresh_token'] === 'undefined') {
-                                res.writeHead(401, {'Content-Type':'text/html'});
-                                res.write('Invalid login! Try again.');
-                                res.end('<html><body><br><a href="/register/google/force">Click me!</a></body></html>');
-                            } else {
-                                var userid = uuid.v4();
-                                dbhandler.insert('accounts', {'ind':0,'access_token':tokens['access_token'],'refresh_token':tokens['refresh_token'],'userid':userid});
-                                var queryparams = {'userid' : userid};
-                                res.writeHead(301, {'location':'/account?' + querystring.stringify(queryparams)});
-                                res.end();
-                            }
-                        } else {
-                            var s_tokens = array[0];
-                            if (parseInt(tokens['expires_in']) < 1000) {
-                                var post_options = {
-                                    'host' : 'accounts.google.com',
-                                    'path' : '/o/oauth2/token',
-                                    'method' : 'POST',
-                                    'headers' : {
-                                        'Content-Type' : 'application/x-www-form-urlencoded'
-                                    }
-                                };
-                                var post_req = https.request(post_options, function(resp) {
-                                    response.setEncoding('utf8');
-                                    var data = '';
-                                    resp.on('data', function(chunk) {
-                                        data += chunk;
-                                    });
-                                    resp.on('end', function() {
-                                        var new_token = JSON.parse(data)['access_token'];
-                                        s_tokens.access_token = new_token;
-                                        dbhandler.update('accounts', 'access_token', new_token, 'refresh_token = "' + s_tokens.refresh_token + '";');
-                                    });
-                                });
-                                post_req.write(querystring.stringify({
-                                    'client_id' : params.google.key,
-                                    'client_secret' : params.google.secret,
-                                    'refresh_token' : s_tokens.refresh_token,
-                                    'grant_type' : 'refresh_token'
-                                }));
-                                post_req.on('error', function(err) {
-                                    console.error('error while refresh google api token');
-                                    console.error(err);
-                                });
-                                post_req.end();
-                            }
-                            var querypars = {'userid':s_tokens.userid};
-                            res.writeHead(301, {'location':'/account?' + querystring.stringify(querypars)});
-                            res.end();
-                        }
+                    get_properties_google(tokens.access_token, function(profile) {
+                       dbhandler.selectWith('accounts', 'WHERE login_id = "' + profile.id + '"', function(array) {
+                           if (typeof array === 'undefined' || array.length < 1) {
+                               if (typeof tokens['refresh_token'] === 'undefined') {
+                                   res.writeHead(401, {'Content-Type':'text/html'});
+                                   res.write('Invalid login! Try again.');
+                                   res.end('<html><body><br><a href="/register/google/force">Click me!</a></body></html>');
+                               } else {
+                                   var userid = uuid.v4();
+                                   dbhandler.insert('accounts', {'ind':0,'userid':userid,'login_id':profile.id,'refresh_token':tokens.refresh_token});
+                                   var queryparams = {'userid':userid};
+                                   res.writeHead(301, {'location':'/account?' + querystring.stringify(queryparams)});
+                                   res.end();
+                               }
+                           } else {
+                               var s_tokens = array[0];
+                               var querypars = {'userid':s_tokens.userid};
+                               res.writeHead(301, {'location':'/account?' + querystring.stringify(querypars)});
+                               res.end();
+                           }
+                       });
                     });
                 });
             });
@@ -142,6 +112,60 @@ function callback_google(res, query, dbhandler) {
     });
 }
 
+function refresh_google(refresh_token, callback) {
+    var options = {
+        'host' : 'accounts.google.com',
+        'path' : '/o/oauth2/token',
+        'method' : 'POST',
+        'encoding' : 'utf8',
+        'headers' : {
+            'Content-Type' : 'application/x-www-form-urlencoded'
+        }
+    };
+    var request = {
+        'client_id' : params.google.key,
+        'client_secret' : params.google.secret,
+        'refresh_token' : refresh_token,
+        'grant_type' : 'refresh_token'
+    };
+    var req = http.request(options, function(response) {
+        var data = '';
+        response.on('data', function(chunk) {
+            data += chunk;
+        });
+        response.on('end', function() {
+           callback(JSON.parse(data).access_token);
+        });
+    });
+    req.write(querystring.stringify(request));
+    req.on('error', function(err) {
+        console.error('error while requesting new access token to google');
+        console.error(err);
+    });
+    req.end();
+}
+
+function get_properties_google(access_token, callback) {
+    var getoptions = {
+   'method' : 'GET',
+   'encoding' : 'utf8',
+   'host' : 'www.googleapis.com',
+   'path' : '/plus/v1/people/me?' + querystring.stringify({
+            'access_token' : access_token
+        })
+    };
+    https.request(getoptions, function(response) {
+    var data = '';
+   response.on('data', function(chunk) {
+       data += chunk;
+   });
+   response.on('end', function() {
+       var profile = JSON.parse(data);
+       callback(profile);
+   });
+   }).end();
+}
+
 function account(res, query, dbhandler) {
     if (typeof query === 'undefined' || typeof query.userid === 'undefined' || query.userid === '') {
         res.writeHead(301, {'location':'/'});
@@ -154,30 +178,17 @@ function account(res, query, dbhandler) {
                 res.end('You\'re not a member of this site!');
            } else {
                 acnt = array[0];
-                var getoptions = {
-                   'method' : 'GET',
-                   'encoding' : 'utf8',
-                   'host' : 'www.googleapis.com',
-                   'path' : '/plus/v1/people/me?' + querystring.stringify({
-                       'access_token' : acnt['access_token']
-                   })
-                };
-                https.request(getoptions, function(response) {
-                   var data = '';
-                   response.on('data', function(chunk) {
-                       data += chunk;
-                   });
-                   response.on('end', function() {
-                       var profile = JSON.parse(data);
+                refresh_google(acnt.refresh_token, function(actoken) {
+                    get_properties_google(actoken, function(profile) {
                        res.writeHead(200, {'Content-Type':'text/html'});
                        res.write('<html><body>');
                        res.write('Real name : ' + profile.displayName + '<br>');
-                       res.write('Nickname : ' + profile.nickname + '<br>');
+                       res.write('Nickname : ' + profile.nickname + '<br><pre>');
                        res.write(writer.write(profile));
-                       res.write('</body></html>');
+                       res.write('</pre></body></html>');
                        res.end();
                    });
-                }).end();
+                });
            }
        });
     }

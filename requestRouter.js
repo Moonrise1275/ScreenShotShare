@@ -47,7 +47,7 @@ function favicon(res, query, dbhandler) {
 function screenshots(res, query, dbhandler) {
     function showImage(res, obj) {
         var describe = '[' + obj.channel + '] ' + obj.username + ' : ' + obj.message + ' - ';
-        describe += moment.utc(obj.date).tz(query.lang || 'Asia/Seoul').format('YYYY.MM.DD HH:mm:ss z') + '<br>';
+        describe += moment.utc(moment(obj.date).format('YYYY-MM-DD-HH-mm-ss'), 'YYYY-MM-DD-HH-mm-ss').tz(query.lang || 'Asia/Seoul').format('YYYY.MM.DD HH:mm:ss z') + '<br>';
         res.write(describe);
         var image = '<image src = "' + obj.address + '" style = "max-width: 100%; height: auto;"/> <p>';
         res.write(image);
@@ -83,10 +83,10 @@ function screenshots(res, query, dbhandler) {
         }
 		
 		if (typeof query.username !== 'undefined') {
-			console.info('username exist');
+			//console.info('username exist');
 			dbhandler.selectWith('screenshots', 'WHERE channel LIKE "%' + query.channel + '%" AND (username LIKE "%' + query.username + '%" OR message LIKE "%' + query.username + '%") ORDER BY ind DESC', onResult);
 		} else {
-			console.info('empty username');
+			//console.info('empty username');
 			dbhandler.selectWith('screenshots', 'ORDER BY ind DESC', onResult);
 		}
     }

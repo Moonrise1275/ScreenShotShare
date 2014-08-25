@@ -12,6 +12,24 @@ function onMessage(bot, dbhandler, config) {
     };
 }
 
+function onPM(bot, dbhandler, config) {
+	return function(nick, text, message) {
+		var commands = text.split(' ');
+		if (commands[0] == '&command') {
+			switch(commands[1]) {
+				case 'join' :
+					if(commands[2].indexOf('#') !== 0) commands[2] = '#' + commands[2];
+					bot.join(commands[2]);
+					break;
+				case 'part' :
+					if(commands[2].indexOf('#') !== 0) commands[2] = '#' + commands[2];
+					bot.part(commands[2], 'BOOOOOM');
+					break;
+			}
+		}
+	};
+}
+
 function onInvite(bot, server) {
     return function(channel, from, message) {
 		ircbotconfig[server].channels.push(channel);
@@ -35,7 +53,7 @@ function onKick(bot, server, botnick) {
 
 function onQuit(bot) {
 	return function(nick, reason, channels, message) {
-		console.info('IRC bot is reconnecting to server ' + message.server);
+		console.info('IRC bot is reconnecting to server - ' + message.server);
 		bot.connect();
 	}
 }
@@ -50,6 +68,7 @@ function start(config, dbhandler) {
 		var ircconfig = ircbotconfig[server];
         bots[server] = new irc.Client(server, ircconfig.nick, ircconfig);
         bots[server].addListener('message', onMessage(bots[server], dbhandler, config));
+        bots[server].addListener('pm', onPM(bots[server], dbhandler, config));
         bots[server].addListener('invite', onInvite(bots[server], server));
 		bots[server].addListener('kick', onKick(bots[server], server, ircconfig.nick));
 		//bots[server].addListener('quit', onQuit(bots[server]));
