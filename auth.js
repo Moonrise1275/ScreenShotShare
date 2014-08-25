@@ -1,7 +1,6 @@
 var uuid = require("node-uuid");
 var moment = require("moment-timezone");
 var querystring = require("querystring");
-var http = require("http");
 var https = require("https");
 
 var writer = require("./JSONWriter");
@@ -128,7 +127,7 @@ function refresh_google(refresh_token, callback) {
         'refresh_token' : refresh_token,
         'grant_type' : 'refresh_token'
     };
-    var req = http.request(options, function(response) {
+    var req = https.request(options, function(response) {
         var data = '';
         response.on('data', function(chunk) {
             data += chunk;
