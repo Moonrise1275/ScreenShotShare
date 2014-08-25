@@ -3,6 +3,7 @@ var url = require("url");
 var querystring = require("querystring");
 var moment = require("moment");
 
+var botFactory = require("./botFactory");
 var rrouter = require("./requestRouter");
 //var erouter = require("./eventRouter");
 
@@ -34,7 +35,7 @@ function start(config, dbhandler) {
     var ip = process.env.OPENSHIFT_NODEJS_IP || config.webserver.ip;
     var port = process.env.OPENSHIFT_NODEJS_PORT || config.webserver.port;
     
-    
+    botFactory.start(config, dbhandler, server);
     
     server.listen(port, ip);
 }

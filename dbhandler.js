@@ -22,8 +22,9 @@ function createDatabases() {
 	query('CREATE TABLE accounts ( ind INT AUTO_INCREMENT PRIMARY KEY, userid CHAR(36) NOT NULL, login_id TINYTEXT NOT NULL, refresh_token TINYTEXT NOT NULL, login_provider VARCHAR(20) NOT NULL );');
 	query('CREATE TABLE nicknames ( ind INT AUTO_INCREMENT PRIMARY KEY, userid CHAR(36) NOT NULL, nick TINYTEXT NOT NULL );');
 	query('CREATE TABLE ircnames ( ind INT AUTO_INCREMENT PRIMARY KEY, userid CHAR(36) NOT NULL, ircname TINYTEXT NOT NULL );');
-	query('CREATE TABLE communities ( ind INT AUTO_INCREMENT PRIMARY KEY, commid CHAR(36) NOT NULL, name TINYTEXT, master CHAR(36) NOT NULL, channel TINYTEXT );');
+	query('CREATE TABLE communities ( ind INT AUTO_INCREMENT PRIMARY KEY, commid CHAR(36) NOT NULL, name TINYTEXT, master CHAR(36) NOT NULL, ircserver TINYTEXT, channel TINYTEXT, gwatch TINYINT, gsay TINYINT, gmember TINYINT, gcomm TINYINT );');
 	query('CREATE TABLE members ( ind INT AUTO_INCREMENT PRIMARY KEY, commid CHAR(36) NOT NULL, userid CHAR(36) NOT NULL, grade TINYINT NOT NULL );');
+	query('CREATE TABLE ircchannels ( ind INT AUTO_INCREMENT PRIMARY KEY, server TINYTEXT NOT NULL, channel TINYTEXT NOT NULL );');
 }
 
 function query(msg) {
